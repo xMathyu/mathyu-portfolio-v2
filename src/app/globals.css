@@ -2,20 +2,37 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Variables para el modo claro */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f8fafc; /* Fondo muy claro (equivalente a slate-50) */
+  --foreground: #1f2937; /* Texto oscuro (equivalente a gray-800) */
+  --heading-font: "Poppins", sans-serif;
+  --body-font: "Inter", sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Variables para el modo oscuro */
+.dark {
+  --background: #121212; /* Fondo muy oscuro */
+  --foreground: #e0e0e0; /* Texto claro */
 }
 
+/* Scroll suave */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Fuente global para el cuerpo y los encabezados */
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--body-font);
+  margin: 0;
+  padding: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--heading-font);
 }
