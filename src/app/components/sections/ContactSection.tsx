@@ -3,12 +3,31 @@
 import { motion } from "framer-motion";
 import toast, { Toaster } from "react-hot-toast";
 import { FaLinkedin } from "react-icons/fa";
+import emailjs from "@emailjs/browser";
 
 export default function ContactSection() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Aquí puedes integrar una solución real para enviar el formulario (por ejemplo, EmailJS o una API)
-    toast.success("Mensaje enviado, gracias por contactarme");
+
+    // Envía el formulario a través de EmailJS
+    emailjs
+      .sendForm(
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
+        e.currentTarget,
+        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
+      )
+      .then(
+        (result) => {
+          console.log(result.text);
+          toast.success("Mensaje enviado, gracias por contactarme");
+        },
+        (error) => {
+          console.log(error.text);
+          toast.error("Hubo un error al enviar el mensaje");
+        }
+      );
+
     e.currentTarget.reset();
   };
 
@@ -63,17 +82,20 @@ export default function ContactSection() {
           <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
             <input
               type="email"
+              name="user_email"
               placeholder="Tu correo"
               required
               className="p-3 border border-gray-300 dark:border-gray-700 rounded focus:outline-none focus:ring focus:ring-brand-500 transition-colors"
             />
             <input
               type="tel"
+              name="user_phone"
               placeholder="Tu teléfono"
               required
               className="p-3 border border-gray-300 dark:border-gray-700 rounded focus:outline-none focus:ring focus:ring-brand-500 transition-colors"
             />
             <textarea
+              name="message"
               placeholder="Escribe tu mensaje..."
               rows={4}
               required

@@ -14,17 +14,17 @@ const projects = [
   },
   {
     id: 2,
-    title: "Inti",
-    description: "Parque botánico y de mariposas",
-    image: "/images/proyecto2.png",
-    url: "https://inti-eta.vercel.app/",
-  },
-  {
-    id: 3,
     title: "Examen docente",
     description: "Sistema de exámenes para docentes",
     image: "/images/proyecto3.png",
     url: "https://docent-exam-xmathyus-projects.vercel.app/",
+  },
+  {
+    id: 3,
+    title: "Inti",
+    description: "Parque botánico y de mariposas",
+    image: "/images/proyecto2.png",
+    url: "https://inti-eta.vercel.app/",
   },
 ];
 
