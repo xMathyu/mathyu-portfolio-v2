@@ -25,7 +25,7 @@ export default function AboutSection() {
   return (
     <section
       id="about"
-      className="relative flex flex-col items-center justify-center min-h-screen bg-background dark:bg-foreground transition-colors px-4 py-16 overflow-hidden"
+      className="relative flex flex-col items-center justify-center bg-background dark:bg-foreground transition-colors px-4 py-16 overflow-hidden"
     >
       {/* Contenedor principal: En md se muestra en fila, en móvil en columna */}
       <div className="relative z-10 flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12 max-w-5xl">
@@ -62,7 +62,7 @@ export default function AboutSection() {
           whileInView={{ opacity: 1, scale: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.3, duration: 0.8 }}
-          className="w-full md:w-1/2 flex flex-col items-center md:items-end text-center md:text-right space-y-3"
+          className="w-full md:w-1/2 flex flex-col items-start text-left space-y-3"
         >
           {/* Título con HoverCard de Radix UI */}
           <HoverCard.Root>
@@ -114,7 +114,7 @@ export default function AboutSection() {
           {/* Botones sociales y de CV */}
           <motion.div
             variants={childVariants}
-            className="mt-6 flex flex-wrap gap-4 justify-center md:justify-end"
+            className="mt-6 flex flex-wrap gap-4 justify-start"
           >
             <a
               href="https://www.linkedin.com/in/mathyu-cardozo-7325a51b5/"

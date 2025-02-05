@@ -42,7 +42,7 @@ export default function ProjectsSection() {
   return (
     <section
       id="projects"
-      className="relative flex flex-col items-center justify-center min-h-screen bg-background dark:bg-foreground transition-colors px-4 py-16 overflow-hidden"
+      className="relative flex flex-col items-center justify-center bg-background dark:bg-foreground transition-colors px-4 py-16 overflow-hidden"
     >
       <h2 className="text-3xl font-semibold mb-8 text-brand-500 dark:text-brand-200 transition-colors">
         Proyectos recientes

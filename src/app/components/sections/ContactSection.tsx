@@ -15,7 +15,7 @@ export default function ContactSection() {
   return (
     <section
       id="contact"
-      className="relative flex flex-col items-center justify-center min-h-screen bg-background dark:bg-foreground transition-colors px-4 py-16 overflow-hidden"
+      className="relative flex flex-col items-center justify-center bg-background dark:bg-foreground transition-colors px-4 py-16 overflow-hidden"
     >
       {/* Contenedor para las notificaciones */}
       <Toaster position="bottom-center" />
