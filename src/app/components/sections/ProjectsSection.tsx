@@ -25,6 +25,7 @@ const projects = [
     description: "Parque botánico y de mariposas",
     image: "/images/proyecto2.png",
     url: "https://inti-eta.vercel.app/",
+    inProgress: true,
   },
 ];
 
@@ -58,7 +59,7 @@ export default function ProjectsSection() {
             viewport={{ once: true }}
             whileHover={{ scale: 1.02 }}
             className="flex flex-col cursor-pointer border rounded p-4 bg-brand-100 text-gray-900 transition-colors shadow-md
-                       dark:bg-gray-900 dark:border-gray-700 dark:text-gray-100"
+               dark:bg-gray-900 dark:border-gray-700 dark:text-gray-100"
           >
             {project.image && (
               <div className="relative w-full h-40 mb-4">
@@ -75,15 +76,21 @@ export default function ProjectsSection() {
               {project.description.slice(0, 80)}
               {project.description.length > 80 ? "..." : ""}
             </p>
-            <a
-              href={project.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-4 inline-block px-4 py-2 bg-brand-500 hover:bg-brand-600 text-white transition-colors text-center
-                         dark:bg-brand-700 dark:hover:bg-brand-600"
-            >
-              Ver sitio web
-            </a>
+            {project.inProgress ? (
+              <span className="mt-4 inline-block px-4 py-2 bg-gray-400 text-white text-center rounded">
+                En progreso
+              </span>
+            ) : (
+              <a
+                href={project.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-4 inline-block px-4 py-2 bg-brand-500 hover:bg-brand-600 text-white transition-colors text-center
+                   dark:bg-brand-700 dark:hover:bg-brand-600"
+              >
+                Ver sitio web
+              </a>
+            )}
           </motion.div>
         ))}
       </div>
