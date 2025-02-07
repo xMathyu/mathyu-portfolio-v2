@@ -1,12 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import {
-  SunIcon,
-  MoonIcon,
-  Bars3Icon,
-  XMarkIcon,
-} from "@heroicons/react/24/solid";
+import { SunIcon, MoonIcon, Bars3Icon } from "@heroicons/react/24/solid";
 
 export function NavBar() {
   const [isDark, setIsDark] = useState(false);
@@ -98,9 +93,9 @@ export function NavBar() {
           {/* Mobile Menu Button */}
           <div className="flex sm:hidden">
             <button
-              onClick={() => setMobileMenuOpen(true)}
+              onClick={() => setMobileMenuOpen((prev) => !prev)}
               className="p-2 rounded-md text-foreground dark:text-background hover:bg-brand-100 dark:hover:bg-brand-800 transition-colors"
-              aria-label="Open mobile menu"
+              aria-label="Toggle mobile menu"
             >
               <Bars3Icon className="w-6 h-6" />
             </button>
@@ -143,15 +138,6 @@ export function NavBar() {
                   </>
                 )}
               </div>
-            </button>
-          </div>
-          <div className="px-4 pb-3">
-            <button
-              onClick={() => setMobileMenuOpen(false)}
-              className="w-full text-right text-foreground dark:text-background hover:text-brand-500 transition-colors"
-              aria-label="Close mobile menu"
-            >
-              <XMarkIcon className="w-6 h-6" />
             </button>
           </div>
         </div>
