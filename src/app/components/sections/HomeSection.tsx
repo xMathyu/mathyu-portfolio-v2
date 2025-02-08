@@ -84,22 +84,24 @@ export default function HomeSection() {
         </div>
       </motion.div>
 
-      {/* Indicador para bajar con animación */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2.5, duration: 1 }}
-        className="absolute bottom-4 w-full text-center text-sm text-foreground dark:text-background transition-colors flex flex-col items-center"
-      >
-        <span>Desplázate hacia abajo</span>
+      {/* Indicador para bajar con animación, clickeable y centrado */}
+      <a href="#about" className="cursor-pointer block">
         <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-          className="mt-2"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2.5, duration: 1 }}
+          className="absolute bottom-4 inset-x-0 text-center text-sm text-foreground dark:text-background transition-colors flex flex-col items-center"
         >
-          <ChevronDownIcon className="w-6 h-6" />
+          <span>Desplázate hacia abajo</span>
+          <motion.div
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+            className="mt-2"
+          >
+            <ChevronDownIcon className="w-6 h-6" />
+          </motion.div>
         </motion.div>
-      </motion.div>
+      </a>
     </section>
   );
 }
