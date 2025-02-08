@@ -114,36 +114,36 @@ export default function AboutSection() {
           {/* Botones sociales y de CV */}
           <motion.div
             variants={childVariants}
-            className="mt-6 flex flex-wrap gap-4 justify-start"
+            className="mt-6 flex flex-wrap gap-2 justify-start"
           >
             <a
               href="https://www.linkedin.com/in/mathyu-cardozo-7325a51b5/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center px-6 py-3 bg-brand-500 dark:bg-brand-700 text-white dark:text-gray-100 font-semibold rounded-full shadow hover:bg-brand-600 dark:hover:bg-brand-600 transition-colors"
+              className="inline-flex items-center px-4 py-2 bg-brand-500 dark:bg-brand-700 text-white dark:text-gray-100 font-medium rounded-lg shadow hover:bg-brand-600 dark:hover:bg-brand-600 transition-colors text-sm"
               aria-label="LinkedIn"
             >
-              <FaLinkedin className="mr-2 w-6 h-6" />
+              <FaLinkedin className="mr-1 w-5 h-5" />
               LinkedIn
             </a>
             <a
               href="https://github.com/xMathyu"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center px-6 py-3 bg-brand-500 dark:bg-brand-700 text-white dark:text-gray-100 font-semibold rounded-full shadow hover:bg-brand-600 dark:hover:bg-brand-600 transition-colors"
+              className="inline-flex items-center px-4 py-2 bg-brand-500 dark:bg-brand-700 text-white dark:text-gray-100 font-medium rounded-lg shadow hover:bg-brand-600 dark:hover:bg-brand-600 transition-colors text-sm"
               aria-label="GitHub"
             >
-              <FaGithub className="mr-2 w-6 h-6" />
+              <FaGithub className="mr-1 w-5 h-5" />
               GitHub
             </a>
             <a
               href="/mathyu-cv-es.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center px-6 py-3 bg-brand-500 dark:bg-brand-700 text-white dark:text-gray-100 font-semibold rounded-full shadow hover:bg-brand-600 dark:hover:bg-brand-600 transition-colors"
+              className="inline-flex items-center px-4 py-2 bg-brand-500 dark:bg-brand-700 text-white dark:text-gray-100 font-medium rounded-lg shadow hover:bg-brand-600 dark:hover:bg-brand-600 transition-colors text-sm"
               aria-label="Descargar CV"
             >
-              <FaDownload className="mr-2 w-6 h-6" />
+              <FaDownload className="mr-1 w-5 h-5" />
               CV
             </a>
           </motion.div>
