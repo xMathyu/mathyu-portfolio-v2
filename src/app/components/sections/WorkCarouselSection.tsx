@@ -1,9 +1,16 @@
 "use client";
 
-import { motion } from "framer-motion";
+import {
+  motion,
+  useMotionValue,
+  useTransform,
+  useAnimationFrame,
+  MotionValue,
+} from "framer-motion";
 import Image from "next/image";
+import { useRef, useState } from "react";
+import { wrap } from "popmotion";
 
-// Datos de ejemplo para las empresas
 const companies = [
   { id: 1, name: "AOS", logo: "/logos/aos.png" },
   { id: 2, name: "Encora", logo: "/logos/encora.png" },
@@ -16,31 +23,79 @@ const companies = [
 ];
 
 export default function WorkCarouselSection() {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [trackWidth, setTrackWidth] = useState(0);
+
+  // Valor para el auto-scroll
+  const autoX = useMotionValue(0);
+  // Valor para el offset del drag manual
+  const dragX = useMotionValue(0);
+
+  // Aquí tipamos el array como una tupla de 2 MotionValue<number>
+  const inputs = [autoX, dragX] as [MotionValue<number>, MotionValue<number>];
+
+  // Combinamos ambos valores y aplicamos wrap para crear el loop infinito
+  // La función recibe un array de números => desestructuramos [a, d] y los sumamos.
+  const totalX: MotionValue<number> = useTransform(
+    inputs,
+    (latestValues: number[]) => {
+      const [a, d] = latestValues;
+      return wrap(-trackWidth, 0, a + d);
+    }
+  );
+
+  const isDragging = useRef(false);
+
+  const onLoadRef = (div: HTMLDivElement) => {
+    if (div && !trackRef.current) {
+      trackRef.current = div;
+      const scrollW = div.scrollWidth / 2;
+      setTrackWidth(scrollW);
+    }
+  };
+
+  // Auto-scroll
+  useAnimationFrame((t, delta) => {
+    if (!isDragging.current && trackWidth > 0) {
+      const speed = 50; // pixeles/segundo
+      const move = -speed * (delta / 1000);
+      autoX.set(autoX.get() + move);
+    }
+  });
+
   return (
     <section
       id="work"
       className="relative py-16 bg-background dark:bg-foreground overflow-hidden"
     >
-      {/* Contenedor central */}
       <div className="max-w-5xl mx-auto px-4">
         <h2 className="text-3xl font-bold text-brand-500 dark:text-brand-200 text-center mb-8">
           Empresas con las que he trabajado
         </h2>
 
-        {/* Contenedor del carrusel con degradados laterales */}
         <div className="relative overflow-hidden">
-          {/* Degradado izquierdo */}
           <div className="absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-background dark:from-foreground z-10 pointer-events-none" />
-          {/* Degradado derecho */}
           <div className="absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-background dark:from-foreground z-10 pointer-events-none" />
 
           <motion.div
+            ref={onLoadRef}
             className="flex items-center space-x-8"
-            animate={{ x: "-50%" }}
-            transition={{
-              ease: "linear",
-              duration: 30,
-              repeat: Infinity,
+            style={{ x: totalX }}
+            drag="x"
+            dragMomentum={false}
+            dragElastic={0}
+            dragConstraints={{ left: -99999, right: 99999 }}
+            onDragStart={() => {
+              isDragging.current = true;
+            }}
+            onDrag={(event, info) => {
+              dragX.set(info.offset.x);
+            }}
+            onDragEnd={(event, info) => {
+              isDragging.current = false;
+              // Suma el desplazamiento manual al autoX
+              autoX.set(autoX.get() + info.offset.x);
+              dragX.set(0);
             }}
           >
             {[...companies, ...companies].map((company, index) => (
@@ -55,6 +110,7 @@ export default function WorkCarouselSection() {
                   alt={company.name}
                   width={150}
                   height={80}
+                  draggable={false}
                   className="object-contain grayscale hover:grayscale-0 transition duration-300"
                 />
               </motion.div>
