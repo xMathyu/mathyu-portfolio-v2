@@ -1,0 +1,15 @@
+{
+  "NavBar": {
+    "logo": "Mathyu C.",
+    "links": {
+      "home": "Inicio",
+      "about": "Acerca de mí",
+      "projects": "Proyectos",
+      "contact": "Contacto"
+    },
+    "toggle": {
+      "dark": "Modo Oscuro",
+      "light": "Modo Claro"
+    }
+  }
+}

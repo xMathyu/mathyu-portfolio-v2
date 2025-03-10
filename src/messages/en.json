@@ -1,0 +1,15 @@
+{
+  "NavBar": {
+    "logo": "Mathyu C.",
+    "links": {
+      "home": "Home",
+      "about": "About Me",
+      "projects": "Projects",
+      "contact": "Contact"
+    },
+    "toggle": {
+      "dark": "Dark Mode",
+      "light": "Light Mode"
+    }
+  }
+}
