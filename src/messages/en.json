@@ -11,5 +11,49 @@
       "dark": "Dark Mode",
       "light": "Light Mode"
     }
+  },
+  "Footer": {
+    "rights": "© {year} Mathyu Cardozo. All rights reserved."
+  },
+  "HomeSection": {
+    "greeting": "Hello! I'm Mathyu Cardozo",
+    "typewriterWords": "FullStack Developer|Passionate about DevOps|AI Developer",
+    "welcome": "Welcome to my portfolio.",
+    "cta": {
+      "about": "Get to know me",
+      "contact": "Contact me"
+    },
+    "scrollDown": "Scroll down"
+  },
+  "AboutSection": {
+    "title": "About Me",
+    "hoverText": "Discover my passion for technology and innovation.",
+    "paragraph1": "I merge creativity and technology to create impactful digital experiences.",
+    "paragraph2": "With expertise in FullStack, DevOps, and AI, I design innovative solutions with a minimalist approach.",
+    "social": {
+      "linkedin": "LinkedIn",
+      "github": "GitHub",
+      "cv": "Resume"
+    },
+    "altImage": "About me"
+  },
+  "ProjectsSection": {
+    "sectionTitle": "Recent Projects",
+    "inProgress": "In Progress",
+    "viewSite": "View Website"
+  },
+  "WorkCarouselSection": {
+    "sectionTitle": "Companies I've worked with"
+  },
+  "ContactSection": {
+    "sectionTitle": "Contact",
+    "linkedinDescription": "Connect with me on LinkedIn to learn more about my work and collaborations.",
+    "linkedinButton": "Visit my profile",
+    "formEmailPlaceholder": "Your email",
+    "formPhonePlaceholder": "Your phone",
+    "formMessagePlaceholder": "Write your message...",
+    "submitButton": "Send message",
+    "toastSuccess": "Message sent, thank you for contacting me",
+    "toastError": "There was an error sending your message"
   }
 }

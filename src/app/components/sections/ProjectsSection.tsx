@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 // Datos de ejemplo para tus proyectos (se agregó la propiedad "url")
 const projects = [
@@ -40,13 +41,15 @@ const cardVariants = {
 };
 
 export default function ProjectsSection() {
+  const t = useTranslations("ProjectsSection");
+
   return (
     <section
       id="projects"
       className="relative flex flex-col items-center justify-center bg-background dark:bg-foreground transition-colors px-4 py-16 overflow-hidden"
     >
       <h2 className="text-3xl font-semibold mb-8 text-brand-500 dark:text-brand-200 transition-colors">
-        Proyectos recientes
+        {t("sectionTitle")}
       </h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full max-w-6xl">
@@ -58,8 +61,7 @@ export default function ProjectsSection() {
             whileInView="visible"
             viewport={{ once: true }}
             whileHover={{ scale: 1.02 }}
-            className="flex flex-col cursor-pointer border rounded p-4 bg-brand-100 text-gray-900 transition-colors shadow-md
-               dark:bg-gray-900 dark:border-gray-700 dark:text-gray-100"
+            className="flex flex-col cursor-pointer border rounded p-4 bg-brand-100 text-gray-900 transition-colors shadow-md dark:bg-gray-900 dark:border-gray-700 dark:text-gray-100"
           >
             {project.image && (
               <div className="relative w-full h-40 mb-4">
@@ -78,17 +80,16 @@ export default function ProjectsSection() {
             </p>
             {project.inProgress ? (
               <span className="mt-4 inline-block px-4 py-2 bg-gray-400 text-white text-center rounded">
-                En progreso
+                {t("inProgress")}
               </span>
             ) : (
               <a
                 href={project.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-4 inline-block px-4 py-2 bg-brand-500 hover:bg-brand-600 text-white transition-colors text-center
-                   dark:bg-brand-700 dark:hover:bg-brand-600"
+                className="mt-4 inline-block px-4 py-2 bg-brand-500 hover:bg-brand-600 text-white transition-colors text-center dark:bg-brand-700 dark:hover:bg-brand-600"
               >
-                Ver sitio web
+                {t("viewSite")}
               </a>
             )}
           </motion.div>

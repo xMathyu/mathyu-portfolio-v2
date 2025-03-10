@@ -20,13 +20,13 @@ export default async function LocaleLayout({
   params,
 }: {
   children: React.ReactNode;
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
-  // Se obtienen los mensajes para el locale actual
+  const { locale } = await params;
   const messages = await getMessages();
 
   return (
-    <html lang={params.locale} className={inter.className}>
+    <html lang={locale} className={inter.className}>
       <body>
         <NextIntlClientProvider messages={messages}>
           <NavBar />
