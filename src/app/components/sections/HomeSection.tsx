@@ -4,15 +4,20 @@ import { useTypewriter, Cursor } from "react-simple-typewriter";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
+import { useTranslations } from "next-intl";
+import { useMemo } from "react";
 
 export default function HomeSection() {
-  // Configuración del efecto de tipeo
+  const t = useTranslations("HomeSection");
+
+  // Obtenemos el array de palabras desde la traducción
+  const typewriterWords = useMemo(() => {
+    const wordsStr = t("typewriterWords");
+    return wordsStr.split("|");
+  }, [t]);
+
   const [text] = useTypewriter({
-    words: [
-      "Desarrollador FullStack",
-      "Apasionado a DevOps",
-      "Desarrollador de IA",
-    ],
+    words: typewriterWords,
     loop: 0, // ciclo infinito
     typeSpeed: 70,
     deleteSpeed: 50,
@@ -55,7 +60,7 @@ export default function HomeSection() {
         className="relative z-10 order-2 md:order-1 flex flex-col items-center justify-center space-y-4 md:space-y-6 max-w-lg text-center"
       >
         <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-brand-500 dark:text-brand-200 transition-colors">
-          ¡Hola! Soy Mathyu Cardozo
+          {t("greeting")}
         </h1>
 
         <p className="text-xl sm:text-2xl text-foreground dark:text-background transition-colors">
@@ -64,7 +69,7 @@ export default function HomeSection() {
         </p>
 
         <p className="text-lg sm:text-xl text-foreground dark:text-background transition-colors">
-          Bienvenido a mi portafolio.
+          {t("welcome")}
         </p>
 
         {/* Botones de llamada a la acción */}
@@ -73,13 +78,13 @@ export default function HomeSection() {
             href="#about"
             className="px-8 py-3 bg-brand-500 dark:bg-brand-200 text-white dark:text-brand-800 font-semibold rounded-full shadow-md hover:bg-brand-600 dark:hover:bg-brand-300 transition-colors"
           >
-            Conóceme
+            {t("cta.about")}
           </a>
           <a
             href="#contact"
             className="px-8 py-3 bg-brand-500 dark:bg-brand-200 text-white dark:text-brand-800 font-semibold rounded-full shadow-md hover:bg-brand-600 dark:hover:bg-brand-300 transition-colors"
           >
-            Contáctame
+            {t("cta.contact")}
           </a>
         </div>
       </motion.div>
@@ -92,7 +97,7 @@ export default function HomeSection() {
           transition={{ delay: 2.5, duration: 1 }}
           className="absolute bottom-4 inset-x-0 text-center text-sm text-foreground dark:text-background transition-colors flex flex-col items-center"
         >
-          <span>Desplázate hacia abajo</span>
+          <span>{t("scrollDown")}</span>
           <motion.div
             animate={{ y: [0, 10, 0] }}
             transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}

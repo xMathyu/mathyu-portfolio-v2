@@ -10,6 +10,7 @@ import {
 import Image from "next/image";
 import { useRef, useState } from "react";
 import { wrap } from "popmotion";
+import { useTranslations } from "next-intl";
 
 const companies = [
   { id: 1, name: "AOS", logo: "/logos/aos.png" },
@@ -23,6 +24,7 @@ const companies = [
 ];
 
 export default function WorkCarouselSection() {
+  const t = useTranslations("WorkCarouselSection");
   const trackRef = useRef<HTMLDivElement>(null);
   const [trackWidth, setTrackWidth] = useState(0);
 
@@ -35,7 +37,6 @@ export default function WorkCarouselSection() {
   const inputs = [autoX, dragX] as [MotionValue<number>, MotionValue<number>];
 
   // Combinamos ambos valores y aplicamos wrap para crear el loop infinito
-  // La función recibe un array de números => desestructuramos [a, d] y los sumamos.
   const totalX: MotionValue<number> = useTransform(
     inputs,
     (latestValues: number[]) => {
@@ -70,7 +71,7 @@ export default function WorkCarouselSection() {
     >
       <div className="max-w-5xl mx-auto px-4">
         <h2 className="text-3xl font-bold text-brand-500 dark:text-brand-200 text-center mb-8">
-          Empresas con las que he trabajado
+          {t("sectionTitle")}
         </h2>
 
         <div className="relative overflow-hidden">

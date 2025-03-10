@@ -5,6 +5,7 @@ import Tilt from "react-parallax-tilt";
 import Image from "next/image";
 import * as HoverCard from "@radix-ui/react-hover-card";
 import { FaLinkedin, FaGithub, FaDownload } from "react-icons/fa";
+import { useTranslations } from "next-intl";
 
 // Variantes para animar el contenedor y sus hijos
 const containerVariants = {
@@ -22,6 +23,8 @@ const childVariants = {
 };
 
 export default function AboutSection() {
+  const t = useTranslations("AboutSection");
+
   return (
     <section
       id="about"
@@ -48,7 +51,7 @@ export default function AboutSection() {
           >
             <Image
               src="/images/hackaton.png"
-              alt="Acerca de mí"
+              alt={t("altImage")}
               width={500}
               height={350}
               className="object-cover"
@@ -71,7 +74,7 @@ export default function AboutSection() {
                 variants={childVariants}
                 className="text-3xl sm:text-4xl font-bold mb-4 text-brand-500 dark:text-brand-200 border-b-4 border-brand-500 dark:border-brand-200 pb-2 inline-block cursor-help"
               >
-                Acerca de mí
+                {t("title")}
               </motion.h2>
             </HoverCard.Trigger>
             <HoverCard.Content
@@ -80,7 +83,7 @@ export default function AboutSection() {
               className="bg-white dark:bg-gray-800 p-3 rounded-md shadow-lg z-50"
             >
               <p className="text-sm text-gray-900 dark:text-gray-100">
-                Descubre mi pasión por la tecnología y la innovación.
+                {t("hoverText")}
               </p>
             </HoverCard.Content>
           </HoverCard.Root>
@@ -98,16 +101,14 @@ export default function AboutSection() {
               className="leading-relaxed"
               style={{ textAlign: "justify" }}
             >
-              Fusiono creatividad y tecnología para crear experiencias digitales
-              impactantes.
+              {t("paragraph1")}
             </motion.p>
             <motion.p
               variants={childVariants}
               className="leading-relaxed"
               style={{ textAlign: "justify" }}
             >
-              Con expertise en FullStack, DevOps e IA, diseño soluciones
-              innovadoras con un enfoque minimalista.
+              {t("paragraph2")}
             </motion.p>
           </motion.div>
 
@@ -124,7 +125,7 @@ export default function AboutSection() {
               aria-label="LinkedIn"
             >
               <FaLinkedin className="mr-1 w-5 h-5" />
-              LinkedIn
+              {t("social.linkedin")}
             </a>
             <a
               href="https://github.com/xMathyu"
@@ -134,7 +135,7 @@ export default function AboutSection() {
               aria-label="GitHub"
             >
               <FaGithub className="mr-1 w-5 h-5" />
-              GitHub
+              {t("social.github")}
             </a>
             <a
               href="/mathyu-cv-es.pdf"
@@ -144,7 +145,7 @@ export default function AboutSection() {
               aria-label="Descargar CV"
             >
               <FaDownload className="mr-1 w-5 h-5" />
-              CV
+              {t("social.cv")}
             </a>
           </motion.div>
         </motion.div>

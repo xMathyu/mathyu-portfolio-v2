@@ -1,15 +1,16 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { FaLinkedin, FaGithub } from "react-icons/fa";
 
 export default function Footer() {
+  const t = useTranslations("Footer");
   return (
     <footer className="bg-background dark:bg-foreground text-foreground dark:text-background py-8">
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm">
-            &copy; {new Date().getFullYear()} Mathyu Cardozo. Todos los derechos
-            reservados.
+            {t("rights", { year: new Date().getFullYear() })}
           </p>
           <div className="flex space-x-4 mt-4 md:mt-0">
             <a

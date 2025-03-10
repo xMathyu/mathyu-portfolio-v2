@@ -4,8 +4,11 @@ import { motion } from "framer-motion";
 import toast, { Toaster } from "react-hot-toast";
 import { FaLinkedin } from "react-icons/fa";
 import emailjs from "@emailjs/browser";
+import { useTranslations } from "next-intl";
 
 export default function ContactSection() {
+  const t = useTranslations("ContactSection");
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -20,11 +23,11 @@ export default function ContactSection() {
       .then(
         (result) => {
           console.log(result.text);
-          toast.success("Mensaje enviado, gracias por contactarme");
+          toast.success(t("toastSuccess"));
         },
         (error) => {
           console.log(error.text);
-          toast.error("Hubo un error al enviar el mensaje");
+          toast.error(t("toastError"));
         }
       );
 
@@ -45,7 +48,7 @@ export default function ContactSection() {
         transition={{ duration: 0.8 }}
         className="text-3xl font-semibold mb-8 text-brand-500 dark:text-brand-200 transition-colors"
       >
-        Contacto
+        {t("sectionTitle")}
       </motion.h2>
 
       {/* Contenedor responsivo que une ambas opciones en una sola vista */}
@@ -58,17 +61,17 @@ export default function ContactSection() {
           className="flex flex-col items-center justify-center p-6 border rounded-lg shadow-md bg-white dark:bg-gray-800"
         >
           <p className="mb-4 text-lg text-gray-900 dark:text-gray-100 text-center">
-            Conecta conmigo a través de LinkedIn para conocer más sobre mi
-            trabajo y colaboraciones.
+            {t("linkedinDescription")}
           </p>
           <a
             href="https://www.linkedin.com/in/mathyu-cardozo-7325a51b5/"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center px-6 py-3 bg-brand-500 dark:bg-brand-200 text-white dark:text-brand-800 font-semibold rounded-full shadow hover:bg-brand-600 dark:hover:bg-brand-300 transition-colors"
+            aria-label="LinkedIn"
           >
             <FaLinkedin className="mr-2 w-6 h-6" />
-            Visita mi perfil
+            {t("linkedinButton")}
           </a>
         </motion.div>
 
@@ -83,20 +86,20 @@ export default function ContactSection() {
             <input
               type="email"
               name="user_email"
-              placeholder="Tu correo"
+              placeholder={t("formEmailPlaceholder")}
               required
               className="p-3 border border-gray-300 dark:border-gray-700 rounded focus:outline-none focus:ring focus:ring-brand-500 transition-colors"
             />
             <input
               type="tel"
               name="user_phone"
-              placeholder="Tu teléfono"
+              placeholder={t("formPhonePlaceholder")}
               required
               className="p-3 border border-gray-300 dark:border-gray-700 rounded focus:outline-none focus:ring focus:ring-brand-500 transition-colors"
             />
             <textarea
               name="message"
-              placeholder="Escribe tu mensaje..."
+              placeholder={t("formMessagePlaceholder")}
               rows={4}
               required
               className="p-3 border border-gray-300 dark:border-gray-700 rounded focus:outline-none focus:ring focus:ring-brand-500 transition-colors"
@@ -105,7 +108,7 @@ export default function ContactSection() {
               type="submit"
               className="px-6 py-3 rounded bg-brand-500 hover:bg-brand-600 text-white transition-colors"
             >
-              Enviar mensaje
+              {t("submitButton")}
             </button>
           </form>
         </motion.div>
