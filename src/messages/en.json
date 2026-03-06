@@ -4,6 +4,8 @@
     "links": {
       "home": "Home",
       "about": "About",
+      "experience": "Experience",
+      "skills": "Skills",
       "projects": "Projects",
       "contact": "Contact"
     }
@@ -15,7 +17,7 @@
     "subtitle": "Portfolio",
     "greetingPrefix": "Hello, I'm",
     "name": "Mathyu Cardozo",
-    "typewriterWords": "FullStack Developer|DevOps Engineer|AI Developer",
+    "typewriterWords": "FullStack Developer|DevOps Engineer|AI Developer|Tech Lead",
     "welcome": "Building digital experiences that merge creativity, technology, and innovation.",
     "cta": {
       "about": "Discover more",
@@ -26,14 +28,144 @@
   "AboutSection": {
     "subtitle": "Get to know me",
     "title": "About Me",
-    "paragraph1": "I merge creativity and technology to create impactful digital experiences. With a passion for clean code and elegant solutions, I transform complex problems into intuitive interfaces.",
-    "paragraph2": "With expertise in FullStack Development, DevOps, and AI, I design innovative solutions with a minimalist approach. Every project is an opportunity to push boundaries.",
+    "paragraph1": "Sr Fullstack Developer with 6 years of experience, the last 3 years working remotely for US companies with technologies such as Next.js, NestJS, Java Spring Boot, Azure and DevOps.",
+    "paragraph2": "I specialize in developing complex solutions for telemetry in finance, retail automation, CI/CD and quality testing. Currently leading AI initiatives as Tech Lead at Entel, building speech-to-text platforms that process hundreds of thousands of daily audio calls.",
     "social": {
       "linkedin": "LinkedIn",
       "github": "GitHub",
       "cv": "Resume"
     },
     "altImage": "About me"
+  },
+  "ExperienceSection": {
+    "subtitle": "Career Path",
+    "title": "Work Experience",
+    "description": "6+ years building scalable solutions across fintech, retail, telecom and AI sectors.",
+    "present": "Present",
+    "current": "Current",
+    "entel": {
+      "position": "Data Scientist Expert / AI Tech Lead",
+      "company": "Entel",
+      "location": "Hybrid",
+      "description": "Leading the development of SinfonIA, an AI-powered platform for transcribing hundreds of thousands of daily audio calls using Whisper X, generating insights to help agents improve performance.",
+      "a1": "Leading the AI team for SinfonIA, processing hundreds of thousands of audio files daily",
+      "a2": "Implemented Whisper X for high-accuracy speech-to-text transcription with silence detection",
+      "a3": "Developed AI-driven insights engine to analyze agent performance",
+      "a4": "Achieved 75% cost reduction compared to previous vendor solution",
+      "a5": "Architected scalable serverless infrastructure using AWS Lambda and SQS"
+    },
+    "t309": {
+      "position": "Technical Lead",
+      "company": "309 Technology - USA",
+      "location": "Hybrid",
+      "description": "Startup focused on innovative technology solutions and AI-driven applications.",
+      "a1": "Leading the entire development team using Scrumban and Jira",
+      "a2": "Architecting applications with Next.js, AI integration, Java and Kotlin with Spring Boot",
+      "a3": "Managing cloud infrastructure on AWS and implementing ML solutions",
+      "a4": "Designing UI/UX with Figma while coordinating cross-functional teams",
+      "a5": "Establishing development standards and best practices"
+    },
+    "encora": {
+      "position": "Sr Software Engineer",
+      "company": "Encora (Interbank, Niubiz, Scotiabank)",
+      "location": "Remote",
+      "description": "Global technology company providing innovative software engineering solutions to leading enterprises.",
+      "a1": "Developed backend applications using Java Spring Boot with reactive programming (WebFlux, RxJava) for high-performance financial services",
+      "a2": "Contributed to frontend with Angular and Next.js, applied DevOps practices with SonarQube, Kiuwan and CheckStyle"
+    },
+    "serverli": {
+      "position": "Sr Software Engineer",
+      "company": "Serverli - Florida USA",
+      "location": "Remote",
+      "description": "Platform for managing and monitoring physical and IoT security systems, integrating video, access control and devices in real time.",
+      "a1": "Led frontend development with Next.js and backend with Nest.js for IoT security applications",
+      "a2": "Managed environments in Azure, improving system architectures",
+      "a3": "Specialized in IoT security solutions integrating video surveillance and access control"
+    },
+    "mdp": {
+      "position": "Software Engineer",
+      "company": "MDP Consulting",
+      "location": "Hybrid",
+      "description": "IT services leader offering innovative solutions for clients in Latin America. Progressed through multiple roles.",
+      "a1": "Backend Technical Leader: Led Pacific Client project using Java Spring Boot with Java 11/17",
+      "a2": "AI Developer: Developed AI solutions using OpenAI APIs and machine learning",
+      "a3": "Cloud Administrator & DevOps: Managed infrastructure automation across AWS, Azure, and GCP",
+      "a4": "Scrum Master & Mentor: Led MDP bootcamp program, mentoring junior developers",
+      "a5": "Tech Lead: Managed full-stack projects with Memorandum, a Greek technology company",
+      "a6": "Senior Developer: Delivered backend solutions with Java Spring Boot and Node.js, frontend with Angular and React"
+    }
+  },
+  "SkillsSection": {
+    "subtitle": "Tech Arsenal",
+    "title": "Skills & Technologies",
+    "description": "Hover over the 3D sphere to explore my tech stack. Size and color indicate expertise level.",
+    "levels": {
+      "expert": "Expert",
+      "advanced": "Advanced",
+      "intermediate": "Intermediate"
+    },
+    "categories": {
+      "backend": "Backend",
+      "frontend": "Frontend",
+      "language": "Languages",
+      "cloud": "Cloud",
+      "devops": "DevOps",
+      "database": "Databases",
+      "testing": "Testing",
+      "tool": "Tools & AI"
+    }
+  },
+  "AchievementsSection": {
+    "subtitle": "Milestones",
+    "title": "Achievements & Education",
+    "certsTitle": "Certifications & Awards",
+    "educationTitle": "Education",
+    "languagesTitle": "Languages",
+    "winner": "Winner",
+    "certs": {
+      "azure": {
+        "name": "Microsoft Certified: Azure AI Engineer Associate",
+        "issuer": "Microsoft"
+      },
+      "scrum": {
+        "name": "Scrum Fundamentals Certified (SFC)",
+        "issuer": "SCRUMstudy"
+      },
+      "izipay": {
+        "name": "AI Hackathon Winner - Izipay",
+        "issuer": "Izipay"
+      },
+      "bcp": {
+        "name": "AI Hackathon Winner - BCP",
+        "issuer": "Banco de Crédito del Perú"
+      }
+    },
+    "education": {
+      "upc": {
+        "degree": "B.S. in Software Engineering",
+        "institution": "Universidad Peruana de Ciencias Aplicadas",
+        "period": "Mar 2020 — Nov 2024"
+      },
+      "icpna": {
+        "degree": "Advanced English (ICPNA)",
+        "institution": "Language Institute",
+        "period": "Jan 2019 — Dec 2020"
+      }
+    },
+    "languages": {
+      "english": {
+        "name": "English",
+        "level": "Professional"
+      },
+      "spanish": {
+        "name": "Spanish",
+        "level": "Native"
+      },
+      "portuguese": {
+        "name": "Portuguese",
+        "level": "Basic"
+      }
+    }
   },
   "ProjectsSection": {
     "sectionSubtitle": "My Work",

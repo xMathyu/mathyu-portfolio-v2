@@ -4,6 +4,8 @@
     "links": {
       "home": "Inicio",
       "about": "Sobre mí",
+      "experience": "Experiencia",
+      "skills": "Skills",
       "projects": "Proyectos",
       "contact": "Contacto"
     }
@@ -15,7 +17,7 @@
     "subtitle": "Portafolio",
     "greetingPrefix": "Hola, soy",
     "name": "Mathyu Cardozo",
-    "typewriterWords": "Desarrollador FullStack|Ingeniero DevOps|Desarrollador de IA",
+    "typewriterWords": "Desarrollador FullStack|Ingeniero DevOps|Desarrollador de IA|Tech Lead",
     "welcome": "Creando experiencias digitales que fusionan creatividad, tecnología e innovación.",
     "cta": {
       "about": "Descubre más",
@@ -26,14 +28,144 @@
   "AboutSection": {
     "subtitle": "Conóceme",
     "title": "Sobre Mí",
-    "paragraph1": "Fusiono creatividad y tecnología para crear experiencias digitales impactantes. Con pasión por el código limpio y las soluciones elegantes, transformo problemas complejos en interfaces intuitivas.",
-    "paragraph2": "Con expertise en Desarrollo FullStack, DevOps e IA, diseño soluciones innovadoras con un enfoque minimalista. Cada proyecto es una oportunidad para superar límites.",
+    "paragraph1": "Desarrollador Fullstack Sr con 6 años de experiencia, los últimos 3 años trabajando de forma remota para empresas de EE.UU. con tecnologías como Next.js, NestJS, Java Spring Boot, Azure y DevOps.",
+    "paragraph2": "Me especializo en el desarrollo de soluciones complejas para telemetría financiera, automatización retail, CI/CD y pruebas de calidad. Actualmente lidero iniciativas de IA como Tech Lead en Entel, construyendo plataformas de speech-to-text que procesan cientos de miles de llamadas diarias.",
     "social": {
       "linkedin": "LinkedIn",
       "github": "GitHub",
       "cv": "CV"
     },
     "altImage": "Sobre mí"
+  },
+  "ExperienceSection": {
+    "subtitle": "Trayectoria",
+    "title": "Experiencia Laboral",
+    "description": "6+ años construyendo soluciones escalables en sectores de fintech, retail, telecomunicaciones e IA.",
+    "present": "Presente",
+    "current": "Actual",
+    "entel": {
+      "position": "Experto en Ciencia de Datos / AI Tech Lead",
+      "company": "Entel",
+      "location": "Híbrido",
+      "description": "Liderando el desarrollo de SinfonIA, una plataforma impulsada por IA para transcribir cientos de miles de llamadas de audio diarias usando Whisper X, generando insights para mejorar el rendimiento de los agentes.",
+      "a1": "Liderando el equipo de IA de SinfonIA, procesando cientos de miles de archivos de audio diariamente",
+      "a2": "Implementé Whisper X para transcripción de voz a texto de alta precisión con detección de silencio",
+      "a3": "Desarrollé motor de insights con IA para analizar el rendimiento de los agentes",
+      "a4": "Logré una reducción de costos del 75% vs solución del proveedor anterior",
+      "a5": "Diseñé infraestructura serverless escalable con AWS Lambda y SQS"
+    },
+    "t309": {
+      "position": "Líder Técnico",
+      "company": "309 Technology - USA",
+      "location": "Híbrido",
+      "description": "Startup enfocada en soluciones tecnológicas innovadoras y aplicaciones impulsadas por IA.",
+      "a1": "Liderando todo el equipo de desarrollo usando Scrumban y Jira",
+      "a2": "Diseñando aplicaciones con Next.js, integración de IA, Java y Kotlin con Spring Boot",
+      "a3": "Gestionando infraestructura cloud en AWS e implementando soluciones de ML",
+      "a4": "Diseñando UI/UX con Figma coordinando con equipos multifuncionales",
+      "a5": "Estableciendo estándares de desarrollo y buenas prácticas"
+    },
+    "encora": {
+      "position": "Ingeniero de Software Sr",
+      "company": "Encora (Interbank, Niubiz, Scotiabank)",
+      "location": "Remoto",
+      "description": "Empresa tecnológica global que provee soluciones innovadoras de ingeniería de software a empresas líderes.",
+      "a1": "Desarrollé aplicaciones backend con Java Spring Boot con programación reactiva (WebFlux, RxJava) para servicios financieros de alto rendimiento",
+      "a2": "Contribuí al frontend con Angular y Next.js, apliqué DevOps con SonarQube, Kiuwan y CheckStyle"
+    },
+    "serverli": {
+      "position": "Ingeniero de Software Sr",
+      "company": "Serverli - Florida USA",
+      "location": "Remoto",
+      "description": "Plataforma para gestionar y monitorear sistemas de seguridad físicos e IoT, integrando video, control de acceso y dispositivos en tiempo real.",
+      "a1": "Lideré el desarrollo frontend con Next.js y backend con Nest.js para aplicaciones de seguridad IoT",
+      "a2": "Gestioné entornos en Azure, mejorando las arquitecturas del sistema",
+      "a3": "Me especialicé en soluciones de seguridad IoT integrando vigilancia por video y control de acceso"
+    },
+    "mdp": {
+      "position": "Ingeniero de Software",
+      "company": "MDP Consulting",
+      "location": "Híbrido",
+      "description": "Referente en servicios de TI ofreciendo soluciones innovadoras para clientes en América Latina. Progresé a través de múltiples roles.",
+      "a1": "Líder Técnico Backend: Lideré el proyecto Pacific Client con Java Spring Boot y Java 11/17",
+      "a2": "Desarrollador de IA: Desarrollé soluciones de IA usando APIs de OpenAI y machine learning",
+      "a3": "Administrador Cloud & DevOps: Gestioné automatización de infraestructura en AWS, Azure y GCP",
+      "a4": "Scrum Master & Mentor: Lideré el programa de bootcamp de MDP, mentoreando desarrolladores junior",
+      "a5": "Tech Lead: Gestioné proyectos full-stack con Memorandum, empresa tecnológica griega",
+      "a6": "Desarrollador Senior: Entregué soluciones backend con Java Spring Boot y Node.js, frontend con Angular y React"
+    }
+  },
+  "SkillsSection": {
+    "subtitle": "Arsenal Tecnológico",
+    "title": "Skills y Tecnologías",
+    "description": "Pasa el cursor sobre la esfera 3D para explorar mi stack tecnológico. El tamaño y color indican el nivel de expertise.",
+    "levels": {
+      "expert": "Experto",
+      "advanced": "Avanzado",
+      "intermediate": "Intermedio"
+    },
+    "categories": {
+      "backend": "Backend",
+      "frontend": "Frontend",
+      "language": "Lenguajes",
+      "cloud": "Cloud",
+      "devops": "DevOps",
+      "database": "Bases de Datos",
+      "testing": "Testing",
+      "tool": "Herramientas & IA"
+    }
+  },
+  "AchievementsSection": {
+    "subtitle": "Hitos",
+    "title": "Logros y Educación",
+    "certsTitle": "Certificaciones y Premios",
+    "educationTitle": "Educación",
+    "languagesTitle": "Idiomas",
+    "winner": "Ganador",
+    "certs": {
+      "azure": {
+        "name": "Microsoft Certified: Azure AI Engineer Associate",
+        "issuer": "Microsoft"
+      },
+      "scrum": {
+        "name": "Scrum Fundamentals Certified (SFC)",
+        "issuer": "SCRUMstudy"
+      },
+      "izipay": {
+        "name": "Ganador Hackathon IA - Izipay",
+        "issuer": "Izipay"
+      },
+      "bcp": {
+        "name": "Ganador Hackathon IA - BCP",
+        "issuer": "Banco de Crédito del Perú"
+      }
+    },
+    "education": {
+      "upc": {
+        "degree": "Ing. de Software",
+        "institution": "Universidad Peruana de Ciencias Aplicadas",
+        "period": "Mar 2020 — Nov 2024"
+      },
+      "icpna": {
+        "degree": "Inglés Avanzado (ICPNA)",
+        "institution": "Instituto de Idiomas",
+        "period": "Ene 2019 — Dic 2020"
+      }
+    },
+    "languages": {
+      "english": {
+        "name": "Inglés",
+        "level": "Profesional"
+      },
+      "spanish": {
+        "name": "Español",
+        "level": "Nativo"
+      },
+      "portuguese": {
+        "name": "Portugués",
+        "level": "Básico"
+      }
+    }
   },
   "ProjectsSection": {
     "sectionSubtitle": "Mi trabajo",

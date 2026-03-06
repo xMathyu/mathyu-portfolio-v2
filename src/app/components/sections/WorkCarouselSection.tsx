@@ -13,14 +13,16 @@ import { wrap } from "popmotion";
 import { useTranslations } from "next-intl";
 
 const companies = [
-  { id: 1, name: "AOS", logo: "/logos/aos.png" },
-  { id: 2, name: "Encora", logo: "/logos/encora.png" },
-  { id: 3, name: "Interbank", logo: "/logos/interbank.png" },
-  { id: 4, name: "MDP", logo: "/logos/mdp.png" },
-  { id: 5, name: "Niubiz", logo: "/logos/niubiz.png" },
-  { id: 6, name: "Pacifico", logo: "/logos/pacifico.svg" },
-  { id: 7, name: "Serverli", logo: "/logos/serverli.png" },
-  { id: 8, name: "Scotiabank", logo: "/logos/scotiabank.png" },
+  { id: 1, name: "Entel", logo: "/logos/entel-logo.png" },
+  { id: 2, name: "309 Technology", logo: "/logos/309.png" },
+  { id: 3, name: "Encora", logo: "/logos/encora.png" },
+  { id: 4, name: "Serverli", logo: "/logos/serverli.png" },
+  { id: 5, name: "MDP", logo: "/logos/mdp.png" },
+  { id: 6, name: "AOS", logo: "/logos/aos.png" },
+  { id: 7, name: "Interbank", logo: "/logos/interbank.png" },
+  { id: 8, name: "Niubiz", logo: "/logos/niubiz.png" },
+  { id: 9, name: "Pacifico", logo: "/logos/pacifico.svg" },
+  { id: 10, name: "Scotiabank", logo: "/logos/scotiabank.png" },
 ];
 
 export default function WorkCarouselSection() {
