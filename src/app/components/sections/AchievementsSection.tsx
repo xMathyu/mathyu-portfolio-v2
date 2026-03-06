@@ -192,7 +192,7 @@ export default function AchievementsSection() {
             <FaLanguage className="text-accent-400" />
             {t("languagesTitle")}
           </motion.h3>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {languages.map((lang, i) => (
               <motion.div
                 key={lang.key}

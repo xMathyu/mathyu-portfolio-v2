@@ -7,7 +7,7 @@ import dynamic from "next/dynamic";
 const SkillsSphere = dynamic(() => import("../three/SkillsSphere"), {
   ssr: false,
   loading: () => (
-    <div className="w-full h-[500px] md:h-[600px] flex items-center justify-center">
+    <div className="w-full h-[350px] sm:h-[450px] md:h-[600px] flex items-center justify-center">
       <div className="w-8 h-8 border-2 border-accent-400 border-t-transparent rounded-full animate-spin" />
     </div>
   ),

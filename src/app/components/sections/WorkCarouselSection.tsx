@@ -88,7 +88,7 @@ export default function WorkCarouselSection() {
 
           <motion.div
             ref={onLoadRef}
-            className="flex items-center space-x-12"
+            className="flex items-center space-x-6 sm:space-x-12"
             style={{ x: totalX }}
             drag="x"
             dragMomentum={false}
@@ -109,7 +109,7 @@ export default function WorkCarouselSection() {
             {[...companies, ...companies].map((company, index) => (
               <motion.div
                 key={index}
-                className="flex-shrink-0 glass-light rounded-xl p-4 hover:glow transition-all duration-300"
+                className="flex-shrink-0 glass-light rounded-xl p-3 sm:p-4 hover:glow transition-all duration-300"
                 whileHover={{ scale: 1.1, rotate: 2 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
@@ -119,7 +119,7 @@ export default function WorkCarouselSection() {
                   width={120}
                   height={60}
                   draggable={false}
-                  className="object-contain opacity-50 hover:opacity-100 transition-opacity duration-300"
+                  className="object-contain opacity-50 hover:opacity-100 transition-opacity duration-300 w-[80px] h-[40px] sm:w-[120px] sm:h-[60px]"
                 />
               </motion.div>
             ))}

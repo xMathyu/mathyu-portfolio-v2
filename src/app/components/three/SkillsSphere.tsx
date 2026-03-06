@@ -195,7 +195,7 @@ function RotatingCloud() {
 
 export default function SkillsSphere() {
   return (
-    <div className="w-full h-[500px] md:h-[600px]">
+    <div className="w-full h-[350px] sm:h-[450px] md:h-[600px]">
       <Canvas
         camera={{ position: [0, 0, 14], fov: 45 }}
         style={{ background: "transparent" }}

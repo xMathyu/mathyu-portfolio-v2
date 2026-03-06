@@ -231,12 +231,12 @@ function ExperienceCard({ exp, index }: { exp: Experience; index: number }) {
         whileInView={{ opacity: 1, x: 0, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.7, delay: index * 0.1 }}
-        className={`w-full md:w-1/2 ml-12 md:ml-0 ${
+        className={`w-[calc(100%-3.5rem)] md:w-1/2 ml-14 md:ml-0 ${
           isLeft ? "md:pl-12" : "md:pr-12"
         }`}
       >
         <div
-          className="glass rounded-2xl p-6 hover:glow transition-all duration-500 cursor-pointer group"
+          className="glass rounded-2xl p-4 sm:p-6 hover:glow transition-all duration-500 cursor-pointer group"
           onClick={() => setIsOpen(!isOpen)}
         >
           {/* Header */}
@@ -253,7 +253,7 @@ function ExperienceCard({ exp, index }: { exp: Experience; index: number }) {
             <div className="flex-1 min-w-0">
               <div className="flex items-start justify-between gap-2">
                 <div>
-                  <h3 className="text-lg font-bold text-foreground group-hover:text-accent-300 transition-colors">
+                  <h3 className="text-base sm:text-lg font-bold text-foreground group-hover:text-accent-300 transition-colors">
                     {t(exp.positionKey)}
                   </h3>
                   <p className="text-sm text-accent-400 font-medium">

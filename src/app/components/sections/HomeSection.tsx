@@ -45,7 +45,7 @@ export default function HomeSection() {
           <motion.div
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 300 }}
-            className="relative w-64 h-64 sm:w-72 sm:h-72 rounded-full overflow-hidden border-2 border-accent-400/30 shadow-2xl"
+            className="relative w-48 h-48 sm:w-64 sm:h-64 md:w-72 md:h-72 rounded-full overflow-hidden border-2 border-accent-400/30 shadow-2xl"
           >
             <Image
               src="/images/mathyu.jpg"
@@ -74,7 +74,7 @@ export default function HomeSection() {
           {t("subtitle")}
         </motion.span>
 
-        <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold leading-tight">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-extrabold leading-tight">
           <span className="text-foreground">{t("greetingPrefix")}</span>
           <br />
           <span className="text-gradient glow-text">{t("name")}</span>

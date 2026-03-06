@@ -73,7 +73,7 @@ export function NavBar() {
           </a>
 
           {/* Desktop Navigation */}
-          <nav className="hidden sm:flex sm:items-center sm:space-x-1">
+          <nav className="hidden md:flex md:items-center md:space-x-1">
             {navLinks.map((link) => (
               <a
                 key={link.href}
@@ -142,7 +142,7 @@ export function NavBar() {
           </nav>
 
           {/* Mobile Menu Button */}
-          <div className="flex sm:hidden">
+          <div className="flex md:hidden">
             <button
               onClick={() => setMobileMenuOpen((prev) => !prev)}
               className="p-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/5 transition-colors"
@@ -166,7 +166,7 @@ export function NavBar() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.2 }}
-            className="sm:hidden glass overflow-hidden"
+            className="md:hidden glass overflow-hidden"
           >
             <div className="pt-2 pb-4 space-y-1 px-4">
               {navLinks.map((link) => (

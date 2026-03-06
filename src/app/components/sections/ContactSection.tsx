@@ -66,7 +66,7 @@ export default function ContactSection() {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="flex flex-col items-center justify-center p-8 glass rounded-2xl hover:glow transition-all duration-300"
+          className="flex flex-col items-center justify-center p-6 sm:p-8 glass rounded-2xl hover:glow transition-all duration-300"
         >
           <div className="w-16 h-16 rounded-2xl bg-accent-500/10 flex items-center justify-center mb-6">
             <FaLinkedin className="w-8 h-8 text-accent-400" />
@@ -94,7 +94,7 @@ export default function ContactSection() {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="flex flex-col p-8 glass rounded-2xl hover:glow transition-all duration-300"
+          className="flex flex-col p-6 sm:p-8 glass rounded-2xl hover:glow transition-all duration-300"
         >
           <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
             <input
