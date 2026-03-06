@@ -28,21 +28,17 @@ export default function WorkCarouselSection() {
   const trackRef = useRef<HTMLDivElement>(null);
   const [trackWidth, setTrackWidth] = useState(0);
 
-  // Valor para el auto-scroll
   const autoX = useMotionValue(0);
-  // Valor para el offset del drag manual
   const dragX = useMotionValue(0);
 
-  // Aquí tipamos el array como una tupla de 2 MotionValue<number>
   const inputs = [autoX, dragX] as [MotionValue<number>, MotionValue<number>];
 
-  // Combinamos ambos valores y aplicamos wrap para crear el loop infinito
   const totalX: MotionValue<number> = useTransform(
     inputs,
     (latestValues: number[]) => {
       const [a, d] = latestValues;
       return wrap(-trackWidth, 0, a + d);
-    }
+    },
   );
 
   const isDragging = useRef(false);
@@ -55,32 +51,42 @@ export default function WorkCarouselSection() {
     }
   };
 
-  // Auto-scroll
   useAnimationFrame((t, delta) => {
     if (!isDragging.current && trackWidth > 0) {
-      const speed = 50; // pixeles/segundo
+      const speed = 50;
       const move = -speed * (delta / 1000);
       autoX.set(autoX.get() + move);
     }
   });
 
   return (
-    <section
-      id="work"
-      className="relative py-16 bg-background dark:bg-foreground overflow-hidden"
-    >
-      <div className="max-w-5xl mx-auto px-4">
-        <h2 className="text-3xl font-bold text-brand-500 dark:text-brand-200 text-center mb-8">
-          {t("sectionTitle")}
-        </h2>
+    <section id="work" className="relative py-24 overflow-hidden">
+      {/* Subtle divider line */}
+      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-accent-500/20 to-transparent" />
+
+      <div className="max-w-6xl mx-auto px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16 space-y-3"
+        >
+          <span className="text-sm tracking-[0.3em] uppercase text-accent-400 font-medium">
+            {t("sectionSubtitle")}
+          </span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gradient">
+            {t("sectionTitle")}
+          </h2>
+        </motion.div>
 
         <div className="relative overflow-hidden">
-          <div className="absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-background dark:from-foreground z-10 pointer-events-none" />
-          <div className="absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-background dark:from-foreground z-10 pointer-events-none" />
+          <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
+          <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
 
           <motion.div
             ref={onLoadRef}
-            className="flex items-center space-x-8"
+            className="flex items-center space-x-12"
             style={{ x: totalX }}
             drag="x"
             dragMomentum={false}
@@ -94,7 +100,6 @@ export default function WorkCarouselSection() {
             }}
             onDragEnd={(event, info) => {
               isDragging.current = false;
-              // Suma el desplazamiento manual al autoX
               autoX.set(autoX.get() + info.offset.x);
               dragX.set(0);
             }}
@@ -102,23 +107,26 @@ export default function WorkCarouselSection() {
             {[...companies, ...companies].map((company, index) => (
               <motion.div
                 key={index}
-                className="flex-shrink-0"
-                whileHover={{ rotate: 5 }}
+                className="flex-shrink-0 glass-light rounded-xl p-4 hover:glow transition-all duration-300"
+                whileHover={{ scale: 1.1, rotate: 2 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
                 <Image
                   src={company.logo}
                   alt={company.name}
-                  width={150}
-                  height={80}
+                  width={120}
+                  height={60}
                   draggable={false}
-                  className="object-contain grayscale hover:grayscale-0 transition duration-300"
+                  className="object-contain opacity-50 hover:opacity-100 transition-opacity duration-300"
                 />
               </motion.div>
             ))}
           </motion.div>
         </div>
       </div>
+
+      {/* Bottom divider */}
+      <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-accent-500/20 to-transparent" />
     </section>
   );
 }

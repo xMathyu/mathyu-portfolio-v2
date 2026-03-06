@@ -1,35 +1,38 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { FaLinkedin, FaGithub } from "react-icons/fa";
+import { FaLinkedin, FaGithub, FaHeart } from "react-icons/fa";
 
 export default function Footer() {
   const t = useTranslations("Footer");
   return (
-    <footer className="bg-background dark:bg-foreground text-foreground dark:text-background py-8">
+    <footer className="relative border-t border-white/5 py-10">
       <div className="max-w-6xl mx-auto px-4">
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          <p className="text-sm">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-sm text-slate-500 flex items-center gap-1">
             {t("rights", { year: new Date().getFullYear() })}
+            <span className="inline-flex items-center gap-1 text-accent-400">
+              <FaHeart className="w-3 h-3" />
+            </span>
           </p>
-          <div className="flex space-x-4 mt-4 md:mt-0">
+          <div className="flex space-x-4">
             <a
               href="https://www.linkedin.com/in/mathyu-cardozo-7325a51b5/"
               target="_blank"
               rel="noopener noreferrer"
-              className="transition-colors hover:text-brand-500"
+              className="text-slate-500 hover:text-accent-400 transition-colors"
               aria-label="LinkedIn"
             >
-              <FaLinkedin size={24} />
+              <FaLinkedin size={20} />
             </a>
             <a
               href="https://github.com/xMathyu/"
               target="_blank"
               rel="noopener noreferrer"
-              className="transition-colors hover:text-brand-500"
+              className="text-slate-500 hover:text-accent-400 transition-colors"
               aria-label="GitHub"
             >
-              <FaGithub size={24} />
+              <FaGithub size={20} />
             </a>
           </div>
         </div>

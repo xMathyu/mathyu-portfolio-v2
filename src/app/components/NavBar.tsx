@@ -4,21 +4,21 @@ import React, { useEffect, useState, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter, usePathname } from "@/i18n/navigation";
 import { useParams } from "next/navigation";
-import { SunIcon, MoonIcon, Bars3Icon } from "@heroicons/react/24/solid";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
 import ReactCountryFlag from "react-country-flag";
+import { motion, AnimatePresence } from "framer-motion";
 
 export function NavBar() {
   const t = useTranslations("NavBar");
   const router = useRouter();
   const pathname = usePathname();
-  const { locale } = useParams(); // Obtenemos el locale desde la ruta dinámica [locale]
+  const { locale } = useParams();
 
-  const [isDark, setIsDark] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Cerrar dropdown al hacer click fuera
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -32,44 +32,14 @@ export function NavBar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Manejo del tema
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const storedTheme = localStorage.getItem("theme");
-      if (storedTheme === "dark") {
-        document.documentElement.classList.add("dark");
-        setIsDark(true);
-      } else if (storedTheme === "light") {
-        document.documentElement.classList.remove("dark");
-        setIsDark(false);
-      } else {
-        if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-          document.documentElement.classList.add("dark");
-          setIsDark(true);
-          localStorage.setItem("theme", "dark");
-        } else {
-          document.documentElement.classList.remove("dark");
-          setIsDark(false);
-          localStorage.setItem("theme", "light");
-        }
-      }
-    }
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const toggleTheme = () => {
-    const root = document.documentElement;
-    if (isDark) {
-      root.classList.remove("dark");
-      setIsDark(false);
-      localStorage.setItem("theme", "light");
-    } else {
-      root.classList.add("dark");
-      setIsDark(true);
-      localStorage.setItem("theme", "dark");
-    }
-  };
-
-  // Links de navegación
   const navLinks = [
     { href: "#home", label: t("links.home") },
     { href: "#about", label: t("links.about") },
@@ -77,101 +47,95 @@ export function NavBar() {
     { href: "#contact", label: t("links.contact") },
   ];
 
-  // Cambiar idioma usando next-intl (sin concatenar prefijos)
   const changeLocale = (newLocale: "en" | "es") => {
     if (newLocale === locale) return;
     router.replace(pathname, { locale: newLocale });
   };
 
-  // Bandera actual: "US" para inglés, "PE" para español
   const currentFlag = locale === "en" ? "US" : "PE";
 
   return (
-    <header className="bg-background dark:bg-foreground transition-colors shadow-md sticky top-0 z-50">
+    <header
+      className={`sticky top-0 z-50 transition-all duration-300 ${
+        scrolled ? "glass shadow-lg shadow-black/10" : "bg-transparent"
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo / Brand */}
-          <div className="flex-shrink-0">
-            <a
-              href="#home"
-              className="text-2xl font-bold text-brand-500 dark:text-brand-200"
-            >
-              {t("logo")}
-            </a>
-          </div>
+          {/* Logo */}
+          <a
+            href="#home"
+            className="text-xl font-bold text-gradient hover:opacity-80 transition-opacity"
+          >
+            {t("logo")}
+          </a>
 
           {/* Desktop Navigation */}
-          <nav className="hidden sm:flex sm:items-center sm:space-x-8">
+          <nav className="hidden sm:flex sm:items-center sm:space-x-1">
             {navLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
-                className="text-foreground dark:text-white hover:text-brand-500 transition-colors"
+                className="relative px-4 py-2 text-sm font-medium text-slate-300 hover:text-white transition-colors group"
               >
                 {link.label}
+                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-accent-400 to-purple-400 group-hover:w-3/4 transition-all duration-300" />
               </a>
             ))}
 
-            {/* Botón para cambiar tema */}
-            <button
-              onClick={toggleTheme}
-              className="p-2 rounded bg-brand-100 dark:bg-brand-800 hover:bg-brand-200 dark:hover:bg-brand-700 transition-colors"
-              aria-label="Toggle Dark Mode"
-            >
-              {isDark ? (
-                <SunIcon className="w-6 h-6 text-yellow-500" />
-              ) : (
-                <MoonIcon className="w-6 h-6 text-foreground dark:text-white" />
-              )}
-            </button>
-
-            {/* Dropdown para cambiar idioma */}
-            <div className="relative" ref={dropdownRef}>
+            {/* Language dropdown */}
+            <div className="relative ml-4" ref={dropdownRef}>
               <button
                 onClick={() => setDropdownOpen((prev) => !prev)}
-                className="ml-3 p-2 rounded bg-brand-100 dark:bg-brand-800 hover:bg-brand-200 dark:hover:bg-brand-700 transition-colors flex items-center"
+                className="p-2 rounded-lg hover:bg-white/5 transition-colors flex items-center"
                 aria-label="Toggle Language Dropdown"
               >
                 <ReactCountryFlag
                   countryCode={currentFlag}
                   svg
-                  style={{ width: "1.5em", height: "1.5em" }}
+                  style={{ width: "1.3em", height: "1.3em" }}
                 />
               </button>
-              {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-32 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded shadow-lg z-50">
-                  <button
-                    onClick={() => {
-                      changeLocale("en");
-                      setDropdownOpen(false);
-                    }}
-                    className="w-full px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center dark:text-white"
+              <AnimatePresence>
+                {dropdownOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute right-0 mt-2 w-36 glass rounded-xl overflow-hidden shadow-xl"
                   >
-                    <ReactCountryFlag
-                      countryCode="US"
-                      svg
-                      style={{ width: "1.5em", height: "1.5em" }}
-                      className="mr-2"
-                    />
-                    English
-                  </button>
-                  <button
-                    onClick={() => {
-                      changeLocale("es");
-                      setDropdownOpen(false);
-                    }}
-                    className="w-full px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center dark:text-white"
-                  >
-                    <ReactCountryFlag
-                      countryCode="PE"
-                      svg
-                      style={{ width: "1.5em", height: "1.5em" }}
-                      className="mr-2"
-                    />
-                    Español
-                  </button>
-                </div>
-              )}
+                    <button
+                      onClick={() => {
+                        changeLocale("en");
+                        setDropdownOpen(false);
+                      }}
+                      className="w-full px-4 py-2.5 text-left hover:bg-white/10 flex items-center gap-2 text-sm text-slate-300 hover:text-white transition-colors"
+                    >
+                      <ReactCountryFlag
+                        countryCode="US"
+                        svg
+                        style={{ width: "1.3em", height: "1.3em" }}
+                      />
+                      English
+                    </button>
+                    <button
+                      onClick={() => {
+                        changeLocale("es");
+                        setDropdownOpen(false);
+                      }}
+                      className="w-full px-4 py-2.5 text-left hover:bg-white/10 flex items-center gap-2 text-sm text-slate-300 hover:text-white transition-colors"
+                    >
+                      <ReactCountryFlag
+                        countryCode="PE"
+                        svg
+                        style={{ width: "1.3em", height: "1.3em" }}
+                      />
+                      Español
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </nav>
 
@@ -179,103 +143,76 @@ export function NavBar() {
           <div className="flex sm:hidden">
             <button
               onClick={() => setMobileMenuOpen((prev) => !prev)}
-              className="p-2 rounded-md text-foreground dark:text-white hover:bg-brand-100 dark:hover:bg-brand-800 transition-colors"
+              className="p-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/5 transition-colors"
               aria-label="Toggle mobile menu"
             >
-              <Bars3Icon className="w-6 h-6" />
+              {mobileMenuOpen ? (
+                <XMarkIcon className="w-6 h-6" />
+              ) : (
+                <Bars3Icon className="w-6 h-6" />
+              )}
             </button>
           </div>
         </div>
       </div>
 
       {/* Mobile Navigation Panel */}
-      {mobileMenuOpen && (
-        <div className="sm:hidden">
-          <div className="pt-2 pb-3 space-y-1">
-            {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                className="block px-4 py-2 text-base font-medium text-foreground dark:text-white hover:bg-brand-100 dark:hover:bg-brand-800 transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {link.label}
-              </a>
-            ))}
-            <button
-              onClick={() => {
-                toggleTheme();
-                setMobileMenuOpen(false);
-              }}
-              className="block w-full text-left px-4 py-2 text-base font-medium text-foreground dark:text-white hover:bg-brand-100 dark:hover:bg-brand-800 transition-colors"
-              aria-label="Toggle Dark Mode"
-            >
-              <div className="flex items-center">
-                {isDark ? (
-                  <>
-                    <SunIcon className="w-6 h-6 text-yellow-500 mr-2" />
-                    {t("toggle.light")}
-                  </>
-                ) : (
-                  <>
-                    <MoonIcon className="w-6 h-6 text-foreground dark:text-white mr-2" />
-                    {t("toggle.dark")}
-                  </>
-                )}
-              </div>
-            </button>
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2 }}
+            className="sm:hidden glass overflow-hidden"
+          >
+            <div className="pt-2 pb-4 space-y-1 px-4">
+              {navLinks.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  className="block px-4 py-2.5 text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {link.label}
+                </a>
+              ))}
 
-            {/* Dropdown para cambiar idioma en menú móvil */}
-            <div className="relative" ref={dropdownRef}>
-              <button
-                onClick={() => setDropdownOpen((prev) => !prev)}
-                className="ml-3 p-2 rounded bg-brand-100 dark:bg-brand-800 hover:bg-brand-200 dark:hover:bg-brand-700 transition-colors flex items-center"
-                aria-label="Toggle Language Dropdown"
-              >
-                <ReactCountryFlag
-                  countryCode={currentFlag}
-                  svg
-                  style={{ width: "1.5em", height: "1.5em" }}
-                />
-              </button>
-              {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-full sm:w-32 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded shadow-lg z-50">
-                  <button
-                    onClick={() => {
-                      changeLocale("en");
-                      setDropdownOpen(false);
-                    }}
-                    className="w-full px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center dark:text-white"
-                  >
-                    <ReactCountryFlag
-                      countryCode="US"
-                      svg
-                      style={{ width: "1.5em", height: "1.5em" }}
-                      className="mr-2"
-                    />
-                    English
-                  </button>
-                  <button
-                    onClick={() => {
-                      changeLocale("es");
-                      setDropdownOpen(false);
-                    }}
-                    className="w-full px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center dark:text-white"
-                  >
-                    <ReactCountryFlag
-                      countryCode="PE"
-                      svg
-                      style={{ width: "1.5em", height: "1.5em" }}
-                      className="mr-2"
-                    />
-                    Español
-                  </button>
-                </div>
-              )}
+              {/* Language buttons in mobile */}
+              <div className="flex gap-2 px-4 pt-2">
+                <button
+                  onClick={() => {
+                    changeLocale("en");
+                    setMobileMenuOpen(false);
+                  }}
+                  className="flex items-center gap-2 px-3 py-2 text-sm text-slate-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+                >
+                  <ReactCountryFlag
+                    countryCode="US"
+                    svg
+                    style={{ width: "1.3em", height: "1.3em" }}
+                  />
+                  EN
+                </button>
+                <button
+                  onClick={() => {
+                    changeLocale("es");
+                    setMobileMenuOpen(false);
+                  }}
+                  className="flex items-center gap-2 px-3 py-2 text-sm text-slate-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+                >
+                  <ReactCountryFlag
+                    countryCode="PE"
+                    svg
+                    style={{ width: "1.3em", height: "1.3em" }}
+                  />
+                  ES
+                </button>
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

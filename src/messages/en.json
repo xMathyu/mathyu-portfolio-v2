@@ -3,33 +3,31 @@
     "logo": "Mathyu C.",
     "links": {
       "home": "Home",
-      "about": "About Me",
+      "about": "About",
       "projects": "Projects",
       "contact": "Contact"
-    },
-    "toggle": {
-      "dark": "Dark Mode",
-      "light": "Light Mode"
     }
   },
   "Footer": {
     "rights": "© {year} Mathyu Cardozo. All rights reserved."
   },
   "HomeSection": {
-    "greeting": "Hello! I'm Mathyu Cardozo",
-    "typewriterWords": "FullStack Developer|Passionate about DevOps|AI Developer",
-    "welcome": "Welcome to my portfolio.",
+    "subtitle": "Portfolio",
+    "greetingPrefix": "Hello, I'm",
+    "name": "Mathyu Cardozo",
+    "typewriterWords": "FullStack Developer|DevOps Engineer|AI Developer",
+    "welcome": "Building digital experiences that merge creativity, technology, and innovation.",
     "cta": {
-      "about": "Get to know me",
-      "contact": "Contact me"
+      "about": "Discover more",
+      "contact": "Let's talk"
     },
-    "scrollDown": "Scroll down"
+    "scrollDown": "Scroll"
   },
   "AboutSection": {
+    "subtitle": "Get to know me",
     "title": "About Me",
-    "hoverText": "Discover my passion for technology and innovation.",
-    "paragraph1": "I merge creativity and technology to create impactful digital experiences.",
-    "paragraph2": "With expertise in FullStack, DevOps, and AI, I design innovative solutions with a minimalist approach.",
+    "paragraph1": "I merge creativity and technology to create impactful digital experiences. With a passion for clean code and elegant solutions, I transform complex problems into intuitive interfaces.",
+    "paragraph2": "With expertise in FullStack Development, DevOps, and AI, I design innovative solutions with a minimalist approach. Every project is an opportunity to push boundaries.",
     "social": {
       "linkedin": "LinkedIn",
       "github": "GitHub",
@@ -38,22 +36,25 @@
     "altImage": "About me"
   },
   "ProjectsSection": {
+    "sectionSubtitle": "My Work",
     "sectionTitle": "Recent Projects",
     "inProgress": "In Progress",
-    "viewSite": "View Website"
+    "viewSite": "View Project"
   },
   "WorkCarouselSection": {
-    "sectionTitle": "Companies I've worked with"
+    "sectionSubtitle": "Experience",
+    "sectionTitle": "Companies I've Worked With"
   },
   "ContactSection": {
-    "sectionTitle": "Contact",
-    "linkedinDescription": "Connect with me on LinkedIn to learn more about my work and collaborations.",
+    "sectionSubtitle": "Get in touch",
+    "sectionTitle": "Contact Me",
+    "linkedinDescription": "Connect with me on LinkedIn to learn more about my work and explore collaboration opportunities.",
     "linkedinButton": "Visit my profile",
     "formEmailPlaceholder": "Your email",
     "formPhonePlaceholder": "Your phone",
     "formMessagePlaceholder": "Write your message...",
     "submitButton": "Send message",
-    "toastSuccess": "Message sent, thank you for contacting me",
-    "toastError": "There was an error sending your message"
+    "toastSuccess": "Message sent! Thank you for reaching out.",
+    "toastError": "There was an error sending your message."
   }
 }

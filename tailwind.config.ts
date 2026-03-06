@@ -1,8 +1,6 @@
 import type { Config } from "tailwindcss";
 
 export default {
-  // Habilita modo oscuro mediante la clase "dark"
-  darkMode: "class",
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -11,21 +9,37 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Colores para el modo claro (se utilizarán en conjunto con las variables CSS)
-        background: "#F8FAFC", // Un gris muy claro (equivalente a slate-50)
-        foreground: "#1F2937", // Un gris oscuro (equivalente a gray-800)
-        // Paleta "brand": tonos de verde elegantes y profundos
-        brand: {
-          50: "#E3F9E5",
-          100: "#C1EAC5",
-          200: "#A3D9A5",
-          300: "#7BC47F",
-          400: "#57AE5B",
-          500: "#3F9142", // Verde principal (ideal para botones y acentos)
-          600: "#2F8132",
-          700: "#207227",
-          800: "#0E5814",
-          900: "#05400A",
+        background: "#0a0a0f",
+        foreground: "#e2e8f0",
+        accent: {
+          50: "#eef2ff",
+          100: "#e0e7ff",
+          200: "#c7d2fe",
+          300: "#a5b4fc",
+          400: "#818cf8",
+          500: "#6366f1",
+          600: "#4f46e5",
+          700: "#4338ca",
+          800: "#3730a3",
+          900: "#312e81",
+        },
+        purple: {
+          400: "#c084fc",
+          500: "#a855f7",
+        },
+        pink: {
+          400: "#e879f9",
+          500: "#d946ef",
+        },
+      },
+      animation: {
+        "pulse-slow": "pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        float: "float 6s ease-in-out infinite",
+      },
+      keyframes: {
+        float: {
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-20px)" },
         },
       },
     },
