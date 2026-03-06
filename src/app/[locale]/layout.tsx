@@ -1,6 +1,7 @@
 import { Inter } from "next/font/google";
-import { NextIntlClientProvider } from "next-intl";
-import { getMessages } from "next-intl/server";
+import { NextIntlClientProvider, hasLocale } from "next-intl";
+import { notFound } from "next/navigation";
+import { routing } from "@/i18n/routing";
 import "../globals.css";
 import { NavBar } from "../components/NavBar";
 import Scene3DWrapper from "../components/Scene3DWrapper";
@@ -23,13 +24,15 @@ export default async function LocaleLayout({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const messages = await getMessages();
+  if (!hasLocale(routing.locales, locale)) {
+    notFound();
+  }
 
   return (
     <html lang={locale} className={inter.className}>
       <body className="bg-background text-foreground">
         <Scene3DWrapper />
-        <NextIntlClientProvider messages={messages}>
+        <NextIntlClientProvider>
           <NavBar />
           {children}
         </NextIntlClientProvider>
