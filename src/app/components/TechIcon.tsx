@@ -44,7 +44,14 @@ import {
   SiFastapi,
 } from "react-icons/si";
 
-import { FaAws, FaCode, FaCloud, FaTools, FaCog, FaRobot } from "react-icons/fa";
+import {
+  FaAws,
+  FaCode,
+  FaCloud,
+  FaTools,
+  FaCog,
+  FaRobot,
+} from "react-icons/fa";
 
 import { Code2, TestTube, Brain } from "lucide-react";
 
