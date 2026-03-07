@@ -4,6 +4,7 @@ import { useRef, useMemo, useState, Suspense } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Html, OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
+import TechIcon from "../TechIcon";
 
 interface SkillNode {
   name: string;
@@ -120,9 +121,16 @@ function SkillLabel({
               : `0 0 8px ${color}44`,
             transition: "all 0.2s ease",
             cursor: "pointer",
-            display: "inline-block",
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "4px",
           }}
         >
+          <TechIcon
+            technology={skill.name}
+            size={isHovered ? size * 1.2 : size * 0.9}
+            className="flex-shrink-0"
+          />
           {skill.name}
           {isHovered && (
             <span

@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { FaMapMarkerAlt, FaChevronDown, FaChevronUp } from "react-icons/fa";
+import TechIcon from "../TechIcon";
 
 interface Experience {
   id: string;
@@ -322,8 +323,9 @@ function ExperienceCard({ exp, index }: { exp: Experience; index: number }) {
                   {exp.technologies.map((tech) => (
                     <span
                       key={tech}
-                      className="text-xs px-2.5 py-1 rounded-full bg-accent-500/10 text-accent-300 border border-accent-500/20"
+                      className="text-xs px-2.5 py-1 rounded-full bg-accent-500/10 text-accent-300 border border-accent-500/20 inline-flex items-center gap-1.5"
                     >
+                      <TechIcon technology={tech} size={12} />
                       {tech}
                     </span>
                   ))}

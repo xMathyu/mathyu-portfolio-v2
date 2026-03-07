@@ -24,11 +24,11 @@ const projects = [
   },
   {
     id: 3,
-    title: "Inti",
+    title: "Parco di colori",
     description: "Parque botánico y de mariposas",
     image: "/images/proyecto2.png",
-    url: "https://inti-eta.vercel.app/",
-    inProgress: true,
+    url: "http://parcodeicolori.it/",
+    inProgress: false,
     tags: ["Next.js", "AI", "Design"],
   },
 ];
