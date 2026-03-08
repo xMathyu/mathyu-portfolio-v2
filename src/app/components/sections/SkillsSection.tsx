@@ -83,9 +83,7 @@ export default function SkillsSection() {
       return;
     }
 
-    setActiveCategory((current) =>
-      current === category ? "all" : category,
-    );
+    setActiveCategory((current) => (current === category ? "all" : category));
   };
 
   const handleLevelFilter = (level: SkillLevelFilter) => {

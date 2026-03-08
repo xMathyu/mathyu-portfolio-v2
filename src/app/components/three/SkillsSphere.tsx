@@ -134,7 +134,10 @@ function RotatingCloud({ skills }: { skills: SkillNode[] }) {
     setHoveredIndex(null);
   }, [skills]);
 
-  const positions = useMemo(() => fibonacciSphere(skills.length, 4.5), [skills]);
+  const positions = useMemo(
+    () => fibonacciSphere(skills.length, 4.5),
+    [skills],
+  );
 
   useFrame((_, delta) => {
     if (groupRef.current) {
