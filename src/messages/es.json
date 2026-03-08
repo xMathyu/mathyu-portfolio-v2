@@ -98,11 +98,15 @@
   "SkillsSection": {
     "subtitle": "Arsenal Tecnológico",
     "title": "Skills y Tecnologías",
-    "description": "Pasa el cursor sobre la esfera 3D para explorar mi stack tecnológico. El tamaño y color indican el nivel de expertise.",
+    "description": "Pasa el cursor sobre la esfera 3D para explorar mi stack tecnológico. El color representa la categoría, el tamaño el nivel de expertise y los filtros te ayudan a enfocarte.",
+    "filterByLevel": "Filtrar por nivel",
+    "filterByCategory": "Filtrar por categoría",
+    "all": "Todos",
+    "showing": "Mostrando {count} de {total} tecnologías",
+    "empty": "No hay tecnologías que coincidan con los filtros actuales.",
     "levels": {
       "expert": "Experto",
-      "advanced": "Avanzado",
-      "intermediate": "Intermedio"
+      "advanced": "Avanzado"
     },
     "categories": {
       "backend": "Backend",

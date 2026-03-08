@@ -1,67 +1,37 @@
 "use client";
 
-import { useRef, useMemo, useState, Suspense } from "react";
+import { useEffect, useMemo, useRef, useState, Suspense } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Html, OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 import TechIcon from "../TechIcon";
+import {
+  CATEGORY_COLORS,
+  LEVEL_SIZES,
+  SkillCategoryFilter,
+  SkillLevelFilter,
+  SkillNode,
+  getFilteredSkills,
+} from "../skillsData";
 
-interface SkillNode {
-  name: string;
-  level: "expert" | "advanced" | "intermediate";
-  category: string;
+interface SkillsSphereProps {
+  activeCategory?: SkillCategoryFilter;
+  activeLevel?: SkillLevelFilter;
+  emptyLabel: string;
 }
-
-const skills: SkillNode[] = [
-  { name: "Java", level: "expert", category: "backend" },
-  { name: "Spring Boot", level: "expert", category: "backend" },
-  { name: "Next.js", level: "expert", category: "frontend" },
-  { name: "React", level: "expert", category: "frontend" },
-  { name: "JavaScript", level: "expert", category: "language" },
-  { name: "GitHub", level: "expert", category: "devops" },
-  { name: "Node.js", level: "advanced", category: "backend" },
-  { name: "NestJS", level: "advanced", category: "backend" },
-  { name: "TypeScript", level: "advanced", category: "language" },
-  { name: "Python", level: "advanced", category: "language" },
-  { name: "Angular", level: "advanced", category: "frontend" },
-  { name: "Tailwind", level: "advanced", category: "frontend" },
-  { name: "Azure", level: "advanced", category: "cloud" },
-  { name: "AWS", level: "advanced", category: "cloud" },
-  { name: "Docker", level: "advanced", category: "devops" },
-  { name: "PostgreSQL", level: "advanced", category: "database" },
-  { name: "Redis", level: "advanced", category: "database" },
-  { name: "OpenAI API", level: "advanced", category: "tool" },
-  { name: "Kotlin", level: "advanced", category: "language" },
-  { name: "WebFlux", level: "advanced", category: "backend" },
-  { name: "Flask", level: "advanced", category: "backend" },
-  { name: "Jest", level: "advanced", category: "testing" },
-  { name: "JUnit", level: "advanced", category: "testing" },
-  { name: ".NET", level: "intermediate", category: "backend" },
-  { name: "Kubernetes", level: "intermediate", category: "devops" },
-  { name: "Terraform", level: "intermediate", category: "devops" },
-  { name: "GCP", level: "intermediate", category: "cloud" },
-  { name: "MongoDB", level: "intermediate", category: "database" },
-  { name: "Figma", level: "intermediate", category: "tool" },
-  { name: "ML", level: "intermediate", category: "tool" },
-  { name: "C#", level: "intermediate", category: "language" },
-];
-
-const levelColors: Record<string, string> = {
-  expert: "#818cf8",
-  advanced: "#c084fc",
-  intermediate: "#e879f9",
-};
-
-const levelSizes: Record<string, number> = {
-  expert: 16,
-  advanced: 13,
-  intermediate: 11,
-};
 
 function fibonacciSphere(
   n: number,
   radius: number,
 ): [number, number, number][] {
+  if (n <= 0) {
+    return [];
+  }
+
+  if (n === 1) {
+    return [[0, 0, 0]];
+  }
+
   const points: [number, number, number][] = [];
   const goldenAngle = Math.PI * (3 - Math.sqrt(5));
   for (let i = 0; i < n; i++) {
@@ -90,8 +60,8 @@ function SkillLabel({
   onUnhover: () => void;
   isHovered: boolean;
 }) {
-  const color = levelColors[skill.level];
-  const size = levelSizes[skill.level];
+  const color = CATEGORY_COLORS[skill.category];
+  const size = LEVEL_SIZES[skill.level];
 
   return (
     <group position={position}>
@@ -110,28 +80,32 @@ function SkillLabel({
           style={{
             color,
             fontSize: `${isHovered ? size * 1.4 : size}px`,
-            fontWeight:
-              skill.level === "expert"
-                ? 700
-                : skill.level === "advanced"
-                  ? 600
-                  : 500,
+            fontWeight: skill.level === "expert" ? 700 : 600,
             textShadow: isHovered
-              ? `0 0 20px ${color}cc, 0 0 40px ${color}66`
-              : `0 0 8px ${color}44`,
+              ? `0 0 20px ${color}cc, 0 0 40px ${color}55`
+              : `0 0 10px ${color}44`,
             transition: "all 0.2s ease",
             cursor: "pointer",
             display: "inline-flex",
-            alignItems: "center",
-            gap: "4px",
+            flexDirection: isHovered ? "column" : "row",
+            alignItems: isHovered ? "flex-start" : "center",
+            gap: isHovered ? "2px" : "4px",
           }}
         >
-          <TechIcon
-            technology={skill.name}
-            size={isHovered ? size * 1.2 : size * 0.9}
-            className="flex-shrink-0"
-          />
-          {skill.name}
+          <span
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "4px",
+            }}
+          >
+            <TechIcon
+              technology={skill.name}
+              size={isHovered ? size * 1.2 : size * 0.9}
+              className="flex-shrink-0"
+            />
+            {skill.name}
+          </span>
           {isHovered && (
             <span
               style={{
@@ -152,11 +126,15 @@ function SkillLabel({
   );
 }
 
-function RotatingCloud() {
+function RotatingCloud({ skills }: { skills: SkillNode[] }) {
   const groupRef = useRef<THREE.Group>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
-  const positions = useMemo(() => fibonacciSphere(skills.length, 4.5), []);
+  useEffect(() => {
+    setHoveredIndex(null);
+  }, [skills]);
+
+  const positions = useMemo(() => fibonacciSphere(skills.length, 4.5), [skills]);
 
   useFrame((_, delta) => {
     if (groupRef.current) {
@@ -201,9 +179,22 @@ function RotatingCloud() {
   );
 }
 
-export default function SkillsSphere() {
+export default function SkillsSphere({
+  activeCategory = "all",
+  activeLevel = "all",
+  emptyLabel,
+}: SkillsSphereProps) {
+  const filteredSkills = useMemo(
+    () =>
+      getFilteredSkills({
+        category: activeCategory,
+        level: activeLevel,
+      }),
+    [activeCategory, activeLevel],
+  );
+
   return (
-    <div className="w-full h-[350px] sm:h-[450px] md:h-[600px]">
+    <div className="relative w-full h-[350px] sm:h-[450px] md:h-[600px]">
       <Canvas
         camera={{ position: [0, 0, 14], fov: 45 }}
         style={{ background: "transparent" }}
@@ -212,7 +203,7 @@ export default function SkillsSphere() {
       >
         <Suspense fallback={null}>
           <ambientLight intensity={0.5} />
-          <RotatingCloud />
+          <RotatingCloud skills={filteredSkills} />
           <OrbitControls
             enableZoom={false}
             enablePan={false}
@@ -222,6 +213,14 @@ export default function SkillsSphere() {
           />
         </Suspense>
       </Canvas>
+
+      {filteredSkills.length === 0 && (
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-center px-6">
+          <div className="rounded-full border border-white/10 bg-slate-950/70 px-4 py-2 text-sm text-slate-300 backdrop-blur-md">
+            {emptyLabel}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

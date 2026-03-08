@@ -98,11 +98,15 @@
   "SkillsSection": {
     "subtitle": "Tech Arsenal",
     "title": "Skills & Technologies",
-    "description": "Hover over the 3D sphere to explore my tech stack. Size and color indicate expertise level.",
+    "description": "Hover over the 3D sphere to explore my tech stack. Color maps each category, size shows expertise level, and filters help you focus the stack.",
+    "filterByLevel": "Filter by level",
+    "filterByCategory": "Filter by category",
+    "all": "All",
+    "showing": "Showing {count} of {total} technologies",
+    "empty": "No technologies match the current filters.",
     "levels": {
       "expert": "Expert",
-      "advanced": "Advanced",
-      "intermediate": "Intermediate"
+      "advanced": "Advanced"
     },
     "categories": {
       "backend": "Backend",
