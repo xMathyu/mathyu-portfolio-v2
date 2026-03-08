@@ -8,19 +8,19 @@ import { FaExternalLinkAlt } from "react-icons/fa";
 const projects = [
   {
     id: 1,
+    title: "Monyx",
+    description: "AI Finance app",
+    image: "/images/monyx.png",
+    url: "https://monyx.vercel.app/",
+    tags: ["Next.js", "TypeScript", "Firebase", "AI"],
+  },
+  {
+    id: 2,
     title: "Fa Meng Chuen",
     description: "Escuela de Kung Fu",
     image: "/images/proyecto1.png",
     url: "https://famengchuen.com/",
     tags: ["Next.js", "React", "Tailwind"],
-  },
-  {
-    id: 2,
-    title: "Examen docente",
-    description: "Sistema de exámenes para docentes",
-    image: "/images/proyecto3.png",
-    url: "https://docent-exam-xmathyus-projects.vercel.app/",
-    tags: ["React", "TypeScript", "Vercel"],
   },
   {
     id: 3,
