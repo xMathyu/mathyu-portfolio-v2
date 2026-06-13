@@ -81,6 +81,13 @@ h6 {
       0 0 40px rgba(99, 102, 241, 0.3),
       0 0 80px rgba(99, 102, 241, 0.1);
   }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 /* Animated gradient border */
