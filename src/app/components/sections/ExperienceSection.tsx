@@ -1,21 +1,19 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { useRef } from "react";
 import Image from "next/image";
-import { useState } from "react";
-import { useTranslations } from "next-intl";
-import { FaMapMarkerAlt, FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { useLocale, useTranslations } from "next-intl";
+import { FiMapPin } from "react-icons/fi";
+import { gsap, useGSAP, MOTION_OK } from "@/app/lib/gsap";
+import SectionHeading from "../ui/SectionHeading";
 import TechIcon from "../TechIcon";
 
 interface Experience {
   id: string;
-  positionKey: string;
-  companyKey: string;
-  locationKey: string;
+  key: string;
   startDate: string;
   endDate: string;
   isCurrent: boolean;
-  descriptionKey: string;
   achievementKeys: string[];
   technologies: string[];
   companyLogo: string;
@@ -24,360 +22,220 @@ interface Experience {
 const experiences: Experience[] = [
   {
     id: "exp-0",
-    positionKey: "entel.position",
-    companyKey: "entel.company",
-    locationKey: "entel.location",
+    key: "entel",
     startDate: "2025-11",
     endDate: "",
     isCurrent: true,
-    descriptionKey: "entel.description",
-    achievementKeys: [
-      "entel.a1",
-      "entel.a2",
-      "entel.a3",
-      "entel.a4",
-      "entel.a5",
-    ],
-    technologies: [
-      "Python",
-      "FastAPI",
-      "Whisper X",
-      "AWS",
-      "Lambda",
-      "SQS",
-      "OpenAI",
-      "Next.js",
-      "React",
-      "ML",
-      "NLP",
-    ],
+    achievementKeys: ["a1", "a2", "a3", "a4", "a5"],
+    technologies: ["Python", "FastAPI", "Whisper X", "AWS", "Lambda", "SQS", "OpenAI", "Next.js", "React", "ML", "NLP"],
     companyLogo: "/logos/entel-logo.png",
   },
   {
     id: "exp-1",
-    positionKey: "t309.position",
-    companyKey: "t309.company",
-    locationKey: "t309.location",
+    key: "t309",
     startDate: "2025-04",
     endDate: "2025-11",
     isCurrent: false,
-    descriptionKey: "t309.description",
-    achievementKeys: ["t309.a1", "t309.a2", "t309.a3", "t309.a4", "t309.a5"],
-    technologies: [
-      "Next.js",
-      "AI",
-      "Java",
-      "Kotlin",
-      "Spring Boot",
-      "AWS",
-      "ML",
-      "Figma",
-      "React",
-      "TypeScript",
-    ],
+    achievementKeys: ["a1", "a2", "a3", "a4", "a5"],
+    technologies: ["Next.js", "AI", "Java", "Kotlin", "Spring Boot", "AWS", "ML", "Figma", "React", "TypeScript"],
     companyLogo: "/logos/309.png",
   },
   {
     id: "exp-2",
-    positionKey: "encora.position",
-    companyKey: "encora.company",
-    locationKey: "encora.location",
+    key: "encora",
     startDate: "2023-10",
     endDate: "2025-04",
     isCurrent: false,
-    descriptionKey: "encora.description",
-    achievementKeys: ["encora.a1", "encora.a2"],
-    technologies: [
-      "Java",
-      "Spring Boot",
-      "WebFlux",
-      "RxJava",
-      "Azure",
-      "AWS",
-      "Kubernetes",
-      "Angular",
-      "Next.js",
-    ],
+    achievementKeys: ["a1", "a2"],
+    technologies: ["Java", "Spring Boot", "WebFlux", "RxJava", "Azure", "AWS", "Kubernetes", "Angular", "Next.js"],
     companyLogo: "/logos/encora.png",
   },
   {
     id: "exp-3",
-    positionKey: "serverli.position",
-    companyKey: "serverli.company",
-    locationKey: "serverli.location",
+    key: "serverli",
     startDate: "2024-06",
     endDate: "2024-12",
     isCurrent: false,
-    descriptionKey: "serverli.description",
-    achievementKeys: ["serverli.a1", "serverli.a2", "serverli.a3"],
-    technologies: [
-      "Next.js",
-      "NestJS",
-      ".Net",
-      "C#",
-      "Python",
-      "Azure",
-      "Kubernetes",
-      "TypeScript",
-    ],
+    achievementKeys: ["a1", "a2", "a3"],
+    technologies: ["Next.js", "NestJS", ".Net", "C#", "Python", "Azure", "Kubernetes", "TypeScript"],
     companyLogo: "/logos/serverli.png",
   },
   {
     id: "exp-4",
-    positionKey: "mdp.position",
-    companyKey: "mdp.company",
-    locationKey: "mdp.location",
+    key: "mdp",
     startDate: "2020-11",
     endDate: "2023-10",
     isCurrent: false,
-    descriptionKey: "mdp.description",
-    achievementKeys: [
-      "mdp.a1",
-      "mdp.a2",
-      "mdp.a3",
-      "mdp.a4",
-      "mdp.a5",
-      "mdp.a6",
-    ],
-    technologies: [
-      "Java",
-      "Spring Boot",
-      "Node.js",
-      "Angular",
-      "React",
-      "Python",
-      "OpenAI",
-      "AWS",
-      "Azure",
-      "Docker",
-    ],
+    achievementKeys: ["a1", "a2", "a3", "a4", "a5", "a6"],
+    technologies: ["Java", "Spring Boot", "Node.js", "Angular", "React", "Python", "OpenAI", "AWS", "Azure", "Docker"],
     companyLogo: "/logos/mdp.png",
   },
 ];
 
-function formatDate(dateStr: string): string {
-  if (!dateStr) return "Present";
-  const [year, month] = dateStr.split("-");
-  const months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-  return `${months[parseInt(month) - 1]} ${year}`;
-}
-
-function ExperienceCard({ exp, index }: { exp: Experience; index: number }) {
-  const t = useTranslations("ExperienceSection");
-  const [isOpen, setIsOpen] = useState(index === 0);
-  const isLeft = index % 2 === 0;
-
-  return (
-    <div
-      className={`relative flex items-start w-full ${
-        isLeft ? "md:flex-row" : "md:flex-row-reverse"
-      } flex-col md:gap-8`}
-    >
-      {/* Timeline dot */}
-      <div className="absolute left-4 md:left-1/2 md:-translate-x-1/2 top-0 z-20">
-        <motion.div
-          initial={{ scale: 0 }}
-          whileInView={{ scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: index * 0.1 }}
-          className={`w-4 h-4 rounded-full border-2 ${
-            exp.isCurrent
-              ? "bg-accent-400 border-accent-400 shadow-lg shadow-accent-400/50"
-              : "bg-background border-accent-500/50"
-          }`}
-        />
-        {exp.isCurrent && (
-          <motion.div
-            animate={{ scale: [1, 1.8, 1], opacity: [0.5, 0, 0.5] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="absolute inset-0 w-4 h-4 rounded-full bg-accent-400"
-          />
-        )}
-      </div>
-
-      {/* Date label */}
-      <div
-        className={`hidden md:flex w-1/2 ${
-          isLeft ? "justify-end pr-12" : "justify-start pl-12"
-        } pt-0`}
-      >
-        <motion.span
-          initial={{ opacity: 0, x: isLeft ? 20 : -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: index * 0.1 }}
-          className="text-sm text-accent-400 font-mono whitespace-nowrap"
-        >
-          {formatDate(exp.startDate)} —{" "}
-          {exp.isCurrent ? t("present") : formatDate(exp.endDate)}
-        </motion.span>
-      </div>
-
-      {/* Card */}
-      <motion.div
-        initial={{ opacity: 0, x: isLeft ? -40 : 40, y: 20 }}
-        whileInView={{ opacity: 1, x: 0, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.7, delay: index * 0.1 }}
-        className={`w-[calc(100%-3.5rem)] md:w-1/2 ml-14 md:ml-0 ${
-          isLeft ? "md:pl-12" : "md:pr-12"
-        }`}
-      >
-        <div
-          className="glass rounded-2xl p-4 sm:p-6 hover:glow transition-all duration-500 cursor-pointer group"
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          {/* Header */}
-          <div className="flex items-start gap-4">
-            <div className="flex-shrink-0 w-12 h-12 rounded-xl glass-light flex items-center justify-center overflow-hidden">
-              <Image
-                src={exp.companyLogo}
-                alt={t(exp.companyKey)}
-                width={40}
-                height={40}
-                className="object-contain"
-              />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-start justify-between gap-2">
-                <div>
-                  <h3 className="text-base sm:text-lg font-bold text-foreground group-hover:text-accent-300 transition-colors">
-                    {t(exp.positionKey)}
-                  </h3>
-                  <p className="text-sm text-accent-400 font-medium">
-                    {t(exp.companyKey)}
-                  </p>
-                </div>
-                {exp.isCurrent && (
-                  <span className="flex-shrink-0 px-2.5 py-1 text-xs font-medium bg-accent-500/20 text-accent-300 rounded-full border border-accent-500/30">
-                    {t("current")}
-                  </span>
-                )}
-              </div>
-              <div className="flex items-center gap-3 mt-1.5 text-xs text-slate-500">
-                <span className="flex items-center gap-1">
-                  <FaMapMarkerAlt className="w-3 h-3" />
-                  {t(exp.locationKey)}
-                </span>
-                <span className="md:hidden">
-                  {formatDate(exp.startDate)} —{" "}
-                  {exp.isCurrent ? t("present") : formatDate(exp.endDate)}
-                </span>
-              </div>
-            </div>
-            <button className="flex-shrink-0 text-slate-500 hover:text-accent-400 transition-colors mt-1">
-              {isOpen ? (
-                <FaChevronUp className="w-4 h-4" />
-              ) : (
-                <FaChevronDown className="w-4 h-4" />
-              )}
-            </button>
-          </div>
-
-          {/* Description */}
-          <p className="text-sm text-slate-400 mt-3 leading-relaxed">
-            {t(exp.descriptionKey)}
-          </p>
-
-          {/* Expandable content */}
-          <AnimatePresence>
-            {isOpen && (
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                className="overflow-hidden"
-              >
-                {/* Achievements */}
-                <div className="mt-4 space-y-2">
-                  {exp.achievementKeys.map((key, i) => (
-                    <motion.div
-                      key={key}
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.05 }}
-                      className="flex items-start gap-2 text-sm text-slate-300"
-                    >
-                      <span className="text-accent-400 mt-1.5 w-1.5 h-1.5 rounded-full bg-accent-400 flex-shrink-0" />
-                      <span>{t(key)}</span>
-                    </motion.div>
-                  ))}
-                </div>
-
-                {/* Technologies */}
-                <div className="flex flex-wrap gap-2 mt-4">
-                  {exp.technologies.map((tech) => (
-                    <span
-                      key={tech}
-                      className="text-xs px-2.5 py-1 rounded-full bg-accent-500/10 text-accent-300 border border-accent-500/20 inline-flex items-center gap-1.5"
-                    >
-                      <TechIcon technology={tech} size={12} />
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </motion.div>
-    </div>
+function formatDate(dateStr: string, locale: string): string {
+  const [year, month] = dateStr.split("-").map(Number);
+  const label = new Intl.DateTimeFormat(locale, { month: "short", year: "numeric" }).format(
+    new Date(year, month - 1, 1),
   );
+  return label.charAt(0).toUpperCase() + label.slice(1);
 }
 
 export default function ExperienceSection() {
-  const t = useTranslations("ExperienceSection");
+  const t = useTranslations("Experience");
+  const locale = useLocale();
+  const root = useRef<HTMLElement>(null);
+
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia();
+      mm.add(MOTION_OK, () => {
+        gsap.fromTo(
+          "[data-exp-progress]",
+          { scaleY: 0 },
+          {
+            scaleY: 1,
+            ease: "none",
+            scrollTrigger: {
+              trigger: "[data-exp-list]",
+              start: "top 60%",
+              end: "bottom 60%",
+              scrub: true,
+            },
+          },
+        );
+
+        gsap.utils.toArray<HTMLElement>("[data-exp-row]").forEach((row) => {
+          gsap.from(row.querySelectorAll("[data-exp-reveal]"), {
+            autoAlpha: 0,
+            y: 40,
+            duration: 1.1,
+            ease: "expo.out",
+            stagger: 0.07,
+            scrollTrigger: { trigger: row, start: "top 78%", once: true },
+          });
+          gsap.fromTo(
+            row.querySelector("[data-exp-dot]"),
+            { scale: 0.4, backgroundColor: "#2a2a2e" },
+            {
+              scale: 1,
+              backgroundColor: "#f5f5f7",
+              duration: 0.4,
+              scrollTrigger: {
+                trigger: row,
+                start: "top 60%",
+                toggleActions: "play none none reverse",
+              },
+            },
+          );
+        });
+      });
+    },
+    { scope: root },
+  );
 
   return (
-    <section
-      id="experience"
-      className="relative flex flex-col items-center px-4 py-24 overflow-hidden"
-    >
-      {/* Ambient glow */}
-      <div className="absolute top-1/3 left-0 w-96 h-96 bg-accent-500/8 rounded-full blur-[160px]" />
-      <div className="absolute bottom-1/3 right-0 w-96 h-96 bg-purple-500/8 rounded-full blur-[160px]" />
+    <section ref={root} id="experience" className="relative py-28 sm:py-40">
+      <div className="container-x">
+        <SectionHeading
+          eyebrow={t("eyebrow")}
+          title={t.rich("title", { em: (chunks) => <em>{chunks}</em> })}
+          description={t("description")}
+        />
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-        className="text-center mb-16 space-y-3"
-      >
-        <span className="text-sm tracking-[0.3em] uppercase text-accent-400 font-medium">
-          {t("subtitle")}
-        </span>
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gradient">
-          {t("title")}
-        </h2>
-        <p className="text-slate-400 text-sm max-w-lg mx-auto">
-          {t("description")}
-        </p>
-      </motion.div>
+        <div data-exp-list className="relative mt-20">
+          <div className="absolute bottom-0 left-[5px] top-0 w-px bg-white/10">
+            <div
+              data-exp-progress
+              className="h-full w-full origin-top bg-gradient-to-b from-ai-blue via-ai-purple to-ai-orange"
+            />
+          </div>
 
-      {/* Timeline */}
-      <div className="w-full max-w-5xl relative">
-        {/* Timeline line */}
-        <div className="absolute left-[22px] md:left-1/2 md:-translate-x-px top-0 bottom-0 w-px bg-gradient-to-b from-accent-500/50 via-purple-500/30 to-transparent" />
+          {experiences.map((exp) => {
+            const period = `${formatDate(exp.startDate, locale)} — ${
+              exp.isCurrent ? t("present") : formatDate(exp.endDate, locale)
+            }`;
+            return (
+              <article
+                key={exp.id}
+                data-exp-row
+                className="relative grid gap-6 border-t border-white/[0.08] py-12 pl-10 first-of-type:border-t-0 first-of-type:pt-0 md:grid-cols-[minmax(0,240px)_minmax(0,1fr)] md:gap-16 md:pl-14"
+              >
+                <span
+                  data-exp-dot
+                  className="absolute left-0 top-[52px] h-[11px] w-[11px] rounded-full bg-fg ring-4 ring-ink [article:first-of-type>&]:top-1"
+                />
 
-        <div className="space-y-12">
-          {experiences.map((exp, i) => (
-            <ExperienceCard key={exp.id} exp={exp} index={i} />
-          ))}
+                <div className="md:sticky md:top-28 md:self-start">
+                  <div data-exp-reveal className="flex items-center gap-4 md:flex-col md:items-start">
+                    <span className="flex h-14 w-14 flex-shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] p-2.5">
+                      <Image
+                        src={exp.companyLogo}
+                        alt={t(`${exp.key}.company`)}
+                        width={40}
+                        height={40}
+                        className="h-full w-full object-contain"
+                      />
+                    </span>
+                    <div className="flex flex-col gap-2">
+                      <span className="font-mono text-xs uppercase tracking-[0.15em] text-muted">
+                        {period}
+                      </span>
+                      {exp.isCurrent && (
+                        <span className="inline-flex w-fit items-center gap-1.5 rounded-full border border-live/30 bg-live/10 px-2.5 py-0.5 text-[11px] font-medium text-live">
+                          <span className="h-1.5 w-1.5 rounded-full bg-live" />
+                          {t("current")}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="min-w-0">
+                  <h3
+                    data-exp-reveal
+                    className="text-2xl font-semibold leading-tight tracking-[-0.03em] text-fg sm:text-4xl"
+                  >
+                    {t(`${exp.key}.position`)}
+                  </h3>
+                  <p
+                    data-exp-reveal
+                    className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-base text-muted"
+                  >
+                    <span className="font-medium text-fg/90">{t(`${exp.key}.company`)}</span>
+                    <span className="inline-flex items-center gap-1 text-sm text-subtle">
+                      <FiMapPin className="h-3.5 w-3.5" />
+                      {t(`${exp.key}.location`)}
+                    </span>
+                  </p>
+                  <p data-exp-reveal className="mt-6 max-w-3xl text-[17px] leading-relaxed text-muted">
+                    {t(`${exp.key}.description`)}
+                  </p>
+
+                  <ul className="mt-8 grid gap-x-10 gap-y-4 xl:grid-cols-2">
+                    {exp.achievementKeys.map((a) => (
+                      <li
+                        key={a}
+                        data-exp-reveal
+                        className="flex gap-3 text-[15px] leading-relaxed text-fg/85"
+                      >
+                        <span className="bg-ai mt-[9px] h-1.5 w-1.5 flex-shrink-0 rounded-full" />
+                        {t(`${exp.key}.${a}`)}
+                      </li>
+                    ))}
+                  </ul>
+
+                  <div data-exp-reveal className="mt-8 flex flex-wrap gap-2">
+                    {exp.technologies.map((tech) => (
+                      <span key={tech} className="chip">
+                        <TechIcon technology={tech} size={12} />
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </article>
+            );
+          })}
         </div>
       </div>
     </section>

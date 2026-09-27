@@ -1,9 +1,10 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { motion } from "framer-motion";
+import { useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import dynamic from "next/dynamic";
+import { gsap, useGSAP, MOTION_OK } from "@/app/lib/gsap";
+import SectionHeading from "../ui/SectionHeading";
 import {
   SKILLS,
   SKILL_CATEGORIES,
@@ -16,8 +17,8 @@ import {
 const SkillsSphere = dynamic(() => import("../three/SkillsSphere"), {
   ssr: false,
   loading: () => (
-    <div className="w-full h-[350px] sm:h-[450px] md:h-[600px] flex items-center justify-center">
-      <div className="w-8 h-8 border-2 border-accent-400 border-t-transparent rounded-full animate-spin" />
+    <div className="flex h-[21.875rem] max-h-[85svh] w-full items-center justify-center sm:h-[28rem] md:h-[37.5rem]">
+      <div className="h-8 w-8 animate-spin rounded-full border-2 border-fg/60 border-t-transparent" />
     </div>
   ),
 });
@@ -38,24 +39,21 @@ function FilterChip({ active, color, label, onClick }: FilterChipProps) {
       className={`rounded-full border px-3.5 py-1.5 text-xs transition-all duration-200 ${
         active
           ? "border-transparent text-white"
-          : "border-white/10 bg-slate-950/30 text-slate-400 hover:border-white/20 hover:text-slate-200"
+          : "border-white/10 bg-white/[0.02] text-muted hover:border-white/20 hover:text-fg"
       }`}
       style={
         active
           ? {
               color,
               borderColor: `${color}66`,
-              background: `linear-gradient(180deg, ${color}26 0%, rgba(15, 23, 42, 0.72) 100%)`,
+              background: `linear-gradient(180deg, ${color}26 0%, rgba(10, 10, 12, 0.8) 100%)`,
               boxShadow: `0 0 0 1px ${color}33 inset, 0 0 24px ${color}18`,
             }
           : undefined
       }
     >
       <span className="inline-flex items-center gap-2">
-        <span
-          className="h-2 w-2 rounded-full"
-          style={{ backgroundColor: color }}
-        />
+        <span className="h-2 w-2 rounded-full" style={{ backgroundColor: color }} />
         {label}
       </span>
     </button>
@@ -64,16 +62,12 @@ function FilterChip({ active, color, label, onClick }: FilterChipProps) {
 
 export default function SkillsSection() {
   const t = useTranslations("SkillsSection");
-  const [activeCategory, setActiveCategory] =
-    useState<SkillCategoryFilter>("all");
+  const root = useRef<HTMLElement>(null);
+  const [activeCategory, setActiveCategory] = useState<SkillCategoryFilter>("all");
   const [activeLevel, setActiveLevel] = useState<SkillLevelFilter>("all");
 
   const filteredSkillsCount = useMemo(
-    () =>
-      getFilteredSkills({
-        category: activeCategory,
-        level: activeLevel,
-      }).length,
+    () => getFilteredSkills({ category: activeCategory, level: activeLevel }).length,
     [activeCategory, activeLevel],
   );
 
@@ -82,7 +76,6 @@ export default function SkillsSection() {
       setActiveCategory("all");
       return;
     }
-
     setActiveCategory((current) => (current === category ? "all" : category));
   };
 
@@ -91,115 +84,107 @@ export default function SkillsSection() {
       setActiveLevel("all");
       return;
     }
-
     setActiveLevel((current) => (current === level ? "all" : level));
   };
 
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia();
+      mm.add(MOTION_OK, () => {
+        gsap.from("[data-sphere]", {
+          autoAlpha: 0,
+          scale: 0.8,
+          duration: 1.6,
+          ease: "expo.out",
+          scrollTrigger: { trigger: "[data-sphere]", start: "top 80%", once: true },
+        });
+        gsap.from("[data-filters]", {
+          autoAlpha: 0,
+          y: 24,
+          duration: 1,
+          ease: "power3.out",
+          stagger: 0.12,
+          scrollTrigger: { trigger: "[data-filters]", start: "top 85%", once: true },
+        });
+      });
+    },
+    { scope: root },
+  );
+
   return (
-    <section
-      id="skills"
-      className="relative flex flex-col items-center justify-center px-4 py-24 overflow-hidden"
-    >
-      {/* Ambient glow */}
-      <div className="absolute top-1/4 left-0 w-80 h-80 bg-accent-500/10 rounded-full blur-[140px]" />
-      <div className="absolute bottom-1/4 right-0 w-80 h-80 bg-purple-500/10 rounded-full blur-[140px]" />
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-        className="text-center mb-8 space-y-3"
-      >
-        <span className="text-sm tracking-[0.3em] uppercase text-accent-400 font-medium">
-          {t("subtitle")}
-        </span>
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gradient">
-          {t("title")}
-        </h2>
-        <p className="text-slate-400 text-sm max-w-md mx-auto mt-2">
-          {t("description")}
-        </p>
-      </motion.div>
-
-      {/* 3D Skill Sphere */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.8 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1, ease: "easeOut" }}
-        className="w-full max-w-4xl relative"
-      >
-        <SkillsSphere
-          activeCategory={activeCategory}
-          activeLevel={activeLevel}
-          emptyLabel={t("empty")}
-        />
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6, delay: 0.3 }}
-        className="mt-6 flex flex-col items-center gap-3"
-      >
-        <span className="text-[11px] tracking-[0.24em] uppercase text-slate-500">
-          {t("filterByLevel")}
-        </span>
-        <div className="flex flex-wrap justify-center gap-3">
-          <FilterChip
-            active={activeLevel === "all"}
-            color="#cbd5e1"
-            label={t("all")}
-            onClick={() => handleLevelFilter("all")}
+    <section ref={root} id="skills" className="relative overflow-hidden py-28 sm:py-40">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute right-0 top-1/3 h-[480px] w-[480px] rounded-full bg-ai-blue/10 blur-[140px]"
+      />
+      <div className="container-x grid items-center gap-12 lg:grid-cols-12">
+        <div className="lg:col-span-5">
+          <SectionHeading
+            eyebrow={t("eyebrow")}
+            title={t.rich("title", { em: (chunks) => <em>{chunks}</em> })}
+            description={t("description")}
           />
-          {SKILL_LEVELS.map((level) => (
-            <FilterChip
-              key={level.key}
-              active={activeLevel === level.key}
-              color={level.color}
-              label={t(`levels.${level.key}`)}
-              onClick={() => handleLevelFilter(level.key)}
-            />
-          ))}
-        </div>
-      </motion.div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6, delay: 0.5 }}
-        className="mt-6 flex max-w-3xl flex-col items-center gap-3"
-      >
-        <span className="text-[11px] tracking-[0.24em] uppercase text-slate-500">
-          {t("filterByCategory")}
-        </span>
-        <div className="flex flex-wrap justify-center gap-3">
-          <FilterChip
-            active={activeCategory === "all"}
-            color="#cbd5e1"
-            label={t("all")}
-            onClick={() => handleCategoryFilter("all")}
-          />
-          {SKILL_CATEGORIES.map((category) => (
-            <FilterChip
-              key={category.key}
-              active={activeCategory === category.key}
-              color={category.color}
-              label={t(`categories.${category.key}`)}
-              onClick={() => handleCategoryFilter(category.key)}
-            />
-          ))}
+          <div className="mt-12 flex flex-col gap-8">
+            <div data-filters className="flex flex-col gap-3">
+              <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-subtle">
+                {t("filterByLevel")}
+              </span>
+              <div className="flex flex-wrap gap-2.5">
+                <FilterChip
+                  active={activeLevel === "all"}
+                  color="#e5e5ea"
+                  label={t("all")}
+                  onClick={() => handleLevelFilter("all")}
+                />
+                {SKILL_LEVELS.map((level) => (
+                  <FilterChip
+                    key={level.key}
+                    active={activeLevel === level.key}
+                    color={level.color}
+                    label={t(`levels.${level.key}`)}
+                    onClick={() => handleLevelFilter(level.key)}
+                  />
+                ))}
+              </div>
+            </div>
+
+            <div data-filters className="flex flex-col gap-3">
+              <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-subtle">
+                {t("filterByCategory")}
+              </span>
+              <div className="flex flex-wrap gap-2.5">
+                <FilterChip
+                  active={activeCategory === "all"}
+                  color="#e5e5ea"
+                  label={t("all")}
+                  onClick={() => handleCategoryFilter("all")}
+                />
+                {SKILL_CATEGORIES.map((category) => (
+                  <FilterChip
+                    key={category.key}
+                    active={activeCategory === category.key}
+                    color={category.color}
+                    label={t(`categories.${category.key}`)}
+                    onClick={() => handleCategoryFilter(category.key)}
+                  />
+                ))}
+              </div>
+              <p className="mt-2 text-xs text-subtle">
+                {t("showing", { count: filteredSkillsCount, total: SKILLS.length })}
+              </p>
+            </div>
+          </div>
         </div>
-        <p className="text-xs text-slate-500">
-          {t("showing", {
-            count: filteredSkillsCount,
-            total: SKILLS.length,
-          })}
-        </p>
-      </motion.div>
+
+        <div data-sphere className="relative lg:col-span-7">
+          <SkillsSphere
+            activeCategory={activeCategory}
+            activeLevel={activeLevel}
+            emptyLabel={t("empty")}
+          />
+        </div>
+      </div>
     </section>
   );
 }
