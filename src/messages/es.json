@@ -1,45 +1,171 @@
 {
+  "Metadata": {
+    "title": "Mathyu Cardozo — Senior Full-Stack Engineer y AI Tech Lead",
+    "description": "Senior Full-Stack Engineer y AI Tech Lead con más de 6 años construyendo productos escalables con Next.js, Java Spring Boot, NestJS, AWS y Azure. Disponible para nuevas oportunidades."
+  },
+  "Preloader": {
+    "role": "Full-Stack · IA · Cloud"
+  },
   "NavBar": {
-    "logo": "Mathyu C.",
+    "logo": "Mathyu Cardozo",
     "links": {
-      "home": "Inicio",
       "about": "Sobre mí",
+      "work": "Destacado",
       "experience": "Experiencia",
       "skills": "Skills",
       "projects": "Proyectos",
       "contact": "Contacto"
-    }
-  },
-  "Footer": {
-    "rights": "© {year} Mathyu Cardozo. Todos los derechos reservados."
-  },
-  "HomeSection": {
-    "subtitle": "Portafolio",
-    "greetingPrefix": "Hola, soy",
-    "name": "Mathyu Cardozo",
-    "typewriterWords": "Desarrollador FullStack|Ingeniero DevOps|Desarrollador de IA|Tech Lead",
-    "welcome": "Creando experiencias digitales que fusionan creatividad, tecnología e innovación.",
-    "cta": {
-      "about": "Descubre más",
-      "contact": "Hablemos"
     },
-    "scrollDown": "Scroll"
+    "hire": "Contrátame",
+    "menu": "Menú",
+    "close": "Cerrar",
+    "language": "Idioma"
   },
-  "AboutSection": {
-    "subtitle": "Conóceme",
-    "title": "Sobre Mí",
-    "paragraph1": "Desarrollador Fullstack Sr con 6 años de experiencia, los últimos 3 años trabajando de forma remota para empresas de EE.UU. con tecnologías como Next.js, NestJS, Java Spring Boot, Azure y DevOps.",
-    "paragraph2": "Me especializo en el desarrollo de soluciones complejas para telemetría financiera, automatización retail, CI/CD y pruebas de calidad. Actualmente lidero iniciativas de IA como Tech Lead en Entel, construyendo plataformas de speech-to-text que procesan cientos de miles de llamadas diarias.",
+  "Hero": {
+    "available": "Disponible para nuevas oportunidades",
+    "role": "Senior Full-Stack Engineer · AI Tech Lead",
+    "lead": "Diseño, construyo y escalo productos de punta a punta — desde frontends pulidos en Next.js hasta <b>pipelines de IA serverless que procesan cientos de miles de llamadas al día.</b>",
+    "ctaPrimary": "Contrátame",
+    "ctaSecondary": "Descargar CV",
+    "location": "Desde Perú · UTC−5",
+    "remote": "Listo para remoto · Inglés y español",
+    "scroll": "Scroll"
+  },
+  "About": {
+    "eyebrow": "Sobre mí",
+    "manifesto": "Soy Senior Full-Stack Engineer con <em>más de 6 años</em> convirtiendo problemas complejos en productos en los que la gente confía. Los últimos tres años trabajé en remoto para empresas de EE.UU. — hoy lidero el equipo de IA en Entel, donde nuestra plataforma transcribe <em>cientos de miles de llamadas</em> cada día.",
+    "photoAlt": "Retrato de Mathyu Cardozo",
+    "photoCaption": "AI Tech Lead en Entel",
+    "pillarsTitle": "Lo que aporto a tu equipo",
+    "pillars": {
+      "ownership": {
+        "title": "Ownership de punta a punta",
+        "body": "De Figma a producción: frontends en Next.js y React, backends en Java Spring Boot, NestJS y FastAPI."
+      },
+      "leadership": {
+        "title": "Liderazgo técnico",
+        "body": "Lidero equipos con Scrum y Scrumban, defino estándares de ingeniería y mentoreo desarrolladores."
+      },
+      "ai": {
+        "title": "IA en producción",
+        "body": "Whisper X, APIs de OpenAI y pipelines de ML que generan resultados de negocio medibles."
+      },
+      "cloud": {
+        "title": "Cloud y DevOps",
+        "body": "Cargas serverless y en contenedores sobre AWS, Azure y GCP, con CI/CD y quality gates sólidos."
+      }
+    },
     "social": {
       "linkedin": "LinkedIn",
       "github": "GitHub",
       "cv": "CV"
-    },
-    "altImage": "Sobre mí"
+    }
   },
-  "ExperienceSection": {
-    "subtitle": "Trayectoria",
-    "title": "Experiencia Laboral",
+  "Showreel": {
+    "w1": "Crear.",
+    "w2": "Lanzar.",
+    "w3": "Escalar.",
+    "eyebrow": "Lo que hago",
+    "title": "De la idea a producción — <em>de punta a punta</em>.",
+    "disciplines": {
+      "frontend": "Frontend",
+      "backend": "Backend",
+      "cloud": "Cloud y DevOps",
+      "ai": "IA y ML"
+    }
+  },
+  "Stats": {
+    "eyebrow": "En números",
+    "title": "Impacto que se puede <em>medir</em>.",
+    "items": {
+      "cost": {
+        "suffix": "%",
+        "label": "menos costo que el proveedor anterior",
+        "detail": "SinfonIA · Entel"
+      },
+      "calls": {
+        "suffix": "K+",
+        "label": "llamadas transcritas y analizadas cada día",
+        "detail": "Whisper X · AWS Lambda · SQS"
+      },
+      "years": {
+        "suffix": "+",
+        "label": "años construyendo software en producción",
+        "detail": "Fintech · Retail · Telecom · IA"
+      },
+      "hackathons": {
+        "suffix": "×",
+        "label": "ganador de hackathons de IA",
+        "detail": "BCP · Izipay"
+      },
+      "remote": {
+        "suffix": " años",
+        "label": "trabajando en remoto para empresas de EE.UU.",
+        "detail": "309 Technology · Serverli · Encora"
+      },
+      "companies": {
+        "suffix": "+",
+        "label": "empresas y clientes enterprise",
+        "detail": "Interbank · Scotiabank · Niubiz · Pacífico"
+      }
+    }
+  },
+  "CaseStudy": {
+    "eyebrow": "Proyecto destacado",
+    "title": "SinfonIA — cada llamada convertida en <em>insight</em>.",
+    "intro": "Como AI Tech Lead en Entel, lidero el equipo detrás de SinfonIA: una plataforma de speech-to-text y analítica que ayuda a los agentes de call center a mejorar, conversación tras conversación.",
+    "live": "En vivo",
+    "illustrative": "Interfaz ilustrativa",
+    "reel": {
+      "l1": "Cada llamada.",
+      "l2": "Cada palabra.",
+      "l3": "Cada insight.",
+      "caption": "Cientos de miles de llamadas · cada día"
+    },
+    "layers": {
+      "audio": "Audio entrante",
+      "transcript": "Transcripción",
+      "insights": "Insights"
+    },
+    "steps": {
+      "ingest": {
+        "label": "01 — Ingesta",
+        "title": "Hecho para escala masiva",
+        "body": "Cientos de miles de grabaciones al día fluyen por AWS SQS hacia workers serverless en Lambda que escalan bajo demanda."
+      },
+      "transcribe": {
+        "label": "02 — Transcripción",
+        "title": "Speech-to-text de alta precisión",
+        "body": "Whisper X convierte cada llamada en texto con detección de silencios, lista para el análisis."
+      },
+      "understand": {
+        "label": "03 — Comprensión",
+        "title": "Insights que generan impacto",
+        "body": "Un motor de insights con IA analiza el desempeño de los agentes — con un 75% menos de costo que el proveedor anterior."
+      }
+    },
+    "transcript": {
+      "agent": "Agente",
+      "customer": "Cliente",
+      "l1": "¡Hola! Gracias por llamar. ¿En qué puedo ayudarte hoy?",
+      "l2": "Quisiera mejorar mi plan móvil.",
+      "l3": "Claro — déjame buscar la mejor opción para ti.",
+      "silence": "Silencio detectado"
+    },
+    "insights": {
+      "sentiment": "Sentimiento",
+      "sentimentValue": "Positivo",
+      "silence": "Silencios",
+      "silenceValue": "Bajos",
+      "resolution": "Resolución",
+      "resolutionValue": "Lograda",
+      "score": "Score del agente",
+      "tip": "Tip de coaching: confirma las necesidades del cliente antes de presentar opciones."
+    }
+  },
+  "Experience": {
+    "eyebrow": "Experiencia",
+    "title": "Una carrera construida <em>entregando</em>.",
     "description": "6+ años construyendo soluciones escalables en sectores de fintech, retail, telecomunicaciones e IA.",
     "present": "Presente",
     "current": "Actual",
@@ -96,9 +222,9 @@
     }
   },
   "SkillsSection": {
-    "subtitle": "Arsenal Tecnológico",
-    "title": "Skills y Tecnologías",
-    "description": "Pasa el cursor sobre la esfera 3D para explorar mi stack tecnológico. El color representa la categoría, el tamaño el nivel de expertise y los filtros te ayudan a enfocarte.",
+    "eyebrow": "Stack tecnológico",
+    "title": "Las herramientas del <em>oficio</em>.",
+    "description": "Arrastra para rotar la esfera y pasa el cursor para explorar. El color marca la categoría y el tamaño el nivel de expertise.",
     "filterByLevel": "Filtrar por nivel",
     "filterByCategory": "Filtrar por categoría",
     "all": "Todos",
@@ -119,13 +245,52 @@
       "tool": "Herramientas & IA"
     }
   },
-  "AchievementsSection": {
-    "subtitle": "Hitos",
-    "title": "Logros y Educación",
-    "certsTitle": "Certificaciones y Premios",
-    "educationTitle": "Educación",
-    "languagesTitle": "Idiomas",
+  "Projects": {
+    "eyebrow": "Proyectos seleccionados",
+    "title": "Cosas que he <em>construido</em>.",
+    "intro": "Productos y trabajo para clientes — desde e-commerce y finanzas con IA hasta apps nativas de iOS.",
+    "visit": "Ver",
+    "items": {
+      "twenty": {
+        "category": "E-commerce",
+        "description": "Tienda online para TWENTY, marca de moda urbana de Gamarra — catálogo, promociones, carrito y rastreo de pedidos."
+      },
+      "monyx": {
+        "category": "IA · Web app",
+        "description": "App de finanzas personales con IA para registrar gastos y mantenerte dentro del presupuesto."
+      },
+      "calarm": {
+        "category": "App iOS · IA",
+        "description": "Alarmas inteligentes para iOS con IA en el dispositivo (Apple Intelligence y Foundation Models). Suenan incluso con el iPhone en silencio o en modo Concentración."
+      },
+      "selvatici": {
+        "category": "Sitio web",
+        "description": "Sitio bilingüe (IT/EN) para I Selvatici, proyecto comunitario en Basilicata, Italia: talleres de cocina, huerto y costura, y servicio de personal chef."
+      },
+      "famengchuen": {
+        "category": "Sitio web",
+        "description": "Sitio web para una escuela de kung fu, con sus programas, miembros y comunidad."
+      },
+      "parco": {
+        "category": "Sitio web",
+        "description": "Sitio web para un parque botánico y de mariposas en Italia, con guías, galería y reservas."
+      }
+    }
+  },
+  "Companies": {
+    "eyebrow": "Han confiado en mí",
+    "title": "Empresas y clientes con los que he trabajado"
+  },
+  "Achievements": {
+    "eyebrow": "Reconocimientos",
+    "title": "Certificado. Premiado. <em>Siempre aprendiendo.</em>",
     "winner": "Ganador",
+    "hackathonTitle": "2× Ganador de Hackathons de IA",
+    "hackathonBody": "Soluciones de IA ganadoras en los hackathons de BCP e Izipay — incluyendo BankIA, presentada en el escenario de BCP.",
+    "hackathonAlt": "Mathyu presentando BankIA en el escenario del hackathon de IA de BCP",
+    "certification": "Certificación",
+    "education": "Educación",
+    "languagesTitle": "Idiomas",
     "certs": {
       "azure": {
         "name": "Microsoft Certified: Azure AI Engineer Associate",
@@ -134,17 +299,9 @@
       "scrum": {
         "name": "Scrum Fundamentals Certified (SFC)",
         "issuer": "SCRUMstudy"
-      },
-      "izipay": {
-        "name": "Ganador Hackathon IA - Izipay",
-        "issuer": "Izipay"
-      },
-      "bcp": {
-        "name": "Ganador Hackathon IA - BCP",
-        "issuer": "Banco de Crédito del Perú"
       }
     },
-    "education": {
+    "educationItems": {
       "upc": {
         "degree": "Ing. de Software",
         "institution": "Universidad Peruana de Ciencias Aplicadas",
@@ -171,26 +328,29 @@
       }
     }
   },
-  "ProjectsSection": {
-    "sectionSubtitle": "Mi trabajo",
-    "sectionTitle": "Proyectos Recientes",
-    "inProgress": "En progreso",
-    "viewSite": "Ver proyecto"
-  },
-  "WorkCarouselSection": {
-    "sectionSubtitle": "Experiencia",
-    "sectionTitle": "Empresas con las que he trabajado"
-  },
-  "ContactSection": {
-    "sectionSubtitle": "Ponte en contacto",
-    "sectionTitle": "Contáctame",
-    "linkedinDescription": "Conecta conmigo a través de LinkedIn para conocer más sobre mi trabajo y explorar oportunidades de colaboración.",
-    "linkedinButton": "Visita mi perfil",
-    "formEmailPlaceholder": "Tu correo",
-    "formPhonePlaceholder": "Tu teléfono",
-    "formMessagePlaceholder": "Escribe tu mensaje...",
-    "submitButton": "Enviar mensaje",
+  "Contact": {
+    "eyebrow": "Contacto",
+    "title": "Construyamos algo <em>grande</em> juntos.",
+    "body": "Estoy abierto a roles senior y de liderazgo técnico — remotos o híbridos — y a proyectos freelance seleccionados. Cuéntame sobre tu equipo y lo que están construyendo.",
+    "reach": "O encuéntrame en",
+    "linkedin": "LinkedIn",
+    "github": "GitHub",
+    "cv": "Descargar CV",
+    "formTitle": "Envíame un mensaje",
+    "email": "Correo",
+    "emailPlaceholder": "tu@empresa.com",
+    "phone": "Teléfono (opcional)",
+    "phonePlaceholder": "+51 999 999 999",
+    "message": "Mensaje",
+    "messagePlaceholder": "Cuéntame sobre el rol o proyecto…",
+    "submit": "Enviar mensaje",
+    "sending": "Enviando…",
     "toastSuccess": "¡Mensaje enviado! Gracias por contactarme.",
     "toastError": "Hubo un error al enviar el mensaje."
+  },
+  "Footer": {
+    "rights": "© {year} Mathyu Cardozo. Todos los derechos reservados.",
+    "localTime": "Hora local en Perú",
+    "backToTop": "Volver arriba"
   }
 }

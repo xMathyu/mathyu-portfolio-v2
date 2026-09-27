@@ -162,19 +162,19 @@ function RotatingCloud({ skills }: { skills: SkillNode[] }) {
       {/* Center glow */}
       <mesh>
         <sphereGeometry args={[0.3, 16, 16]} />
-        <meshBasicMaterial color="#6366f1" transparent opacity={0.15} />
+        <meshBasicMaterial color="#0894ff" transparent opacity={0.18} />
       </mesh>
       <mesh>
         <sphereGeometry args={[0.8, 16, 16]} />
-        <meshBasicMaterial color="#6366f1" transparent opacity={0.05} />
+        <meshBasicMaterial color="#c959dd" transparent opacity={0.06} />
       </mesh>
       {/* Wireframe sphere outline */}
       <mesh rotation={[0.3, 0, 0]}>
         <sphereGeometry args={[4.8, 24, 24]} />
         <meshBasicMaterial
-          color="#818cf8"
+          color="#ffffff"
           transparent
-          opacity={0.03}
+          opacity={0.035}
           wireframe
         />
       </mesh>
@@ -187,6 +187,12 @@ export default function SkillsSphere({
   activeLevel = "all",
   emptyLabel,
 }: SkillsSphereProps) {
+  const [canDrag, setCanDrag] = useState(false);
+
+  useEffect(() => {
+    setCanDrag(window.matchMedia("(pointer: fine)").matches);
+  }, []);
+
   const filteredSkills = useMemo(
     () =>
       getFilteredSkills({
@@ -197,9 +203,10 @@ export default function SkillsSphere({
   );
 
   return (
-    <div className="relative w-full h-[350px] sm:h-[450px] md:h-[600px]">
+    <div className="relative w-full h-[21.875rem] max-h-[85svh] sm:h-[28rem] md:h-[37.5rem]">
       <Canvas
         camera={{ position: [0, 0, 14], fov: 45 }}
+        resize={{ offsetSize: true }}
         style={{ background: "transparent" }}
         dpr={[1, 1.5]}
         gl={{ alpha: true, antialias: true }}
@@ -207,13 +214,15 @@ export default function SkillsSphere({
         <Suspense fallback={null}>
           <ambientLight intensity={0.5} />
           <RotatingCloud skills={filteredSkills} />
-          <OrbitControls
-            enableZoom={false}
-            enablePan={false}
-            autoRotate={false}
-            minPolarAngle={Math.PI / 4}
-            maxPolarAngle={(3 * Math.PI) / 4}
-          />
+          {canDrag && (
+            <OrbitControls
+              enableZoom={false}
+              enablePan={false}
+              autoRotate={false}
+              minPolarAngle={Math.PI / 4}
+              maxPolarAngle={(3 * Math.PI) / 4}
+            />
+          )}
         </Suspense>
       </Canvas>
 

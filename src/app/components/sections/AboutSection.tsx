@@ -1,137 +1,179 @@
 "use client";
 
-import { motion } from "framer-motion";
-import Tilt from "react-parallax-tilt";
+import { useRef } from "react";
 import Image from "next/image";
-import { FaLinkedin, FaGithub, FaDownload } from "react-icons/fa";
 import { useTranslations } from "next-intl";
+import { FaGithub, FaLinkedin } from "react-icons/fa";
+import { FiCloud, FiCpu, FiDownload, FiLayers, FiUsers } from "react-icons/fi";
+import { gsap, useGSAP, SplitText, MOTION_OK } from "@/app/lib/gsap";
 
-const containerVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { staggerChildren: 0.2, delayChildren: 0.1 },
-  },
-};
-
-const childVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-};
+const pillars = [
+  { key: "ownership", icon: FiLayers },
+  { key: "leadership", icon: FiUsers },
+  { key: "ai", icon: FiCpu },
+  { key: "cloud", icon: FiCloud },
+] as const;
 
 export default function AboutSection() {
-  const t = useTranslations("AboutSection");
+  const t = useTranslations("About");
+  const root = useRef<HTMLElement>(null);
+
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia();
+      mm.add(MOTION_OK, () => {
+        // Words light up one by one as the paragraph scrolls through the viewport
+        SplitText.create("[data-manifesto]", {
+          type: "words",
+          autoSplit: true,
+          onSplit: (self) =>
+            gsap.fromTo(
+              self.words,
+              { opacity: 0.14 },
+              {
+                opacity: 1,
+                ease: "none",
+                stagger: 0.1,
+                scrollTrigger: {
+                  trigger: "[data-manifesto]",
+                  start: "top 78%",
+                  end: "bottom 42%",
+                  scrub: true,
+                },
+              },
+            ),
+        });
+
+        gsap.fromTo(
+          "[data-photo]",
+          { clipPath: "inset(16% 14% 16% 14% round 28px)" },
+          {
+            clipPath: "inset(0% 0% 0% 0% round 28px)",
+            ease: "none",
+            scrollTrigger: {
+              trigger: "[data-photo]",
+              start: "top 90%",
+              end: "top 30%",
+              scrub: true,
+            },
+          },
+        );
+        gsap.fromTo(
+          "[data-photo-img]",
+          { scale: 1.3 },
+          {
+            scale: 1,
+            ease: "none",
+            scrollTrigger: {
+              trigger: "[data-photo]",
+              start: "top bottom",
+              end: "bottom top",
+              scrub: true,
+            },
+          },
+        );
+
+        gsap.from("[data-pillar]", {
+          autoAlpha: 0,
+          y: 40,
+          duration: 1,
+          ease: "power3.out",
+          stagger: 0.1,
+          scrollTrigger: { trigger: "[data-pillars]", start: "top 80%", once: true },
+        });
+      });
+    },
+    { scope: root },
+  );
 
   return (
-    <section
-      id="about"
-      className="relative flex flex-col items-center justify-center px-4 py-24 overflow-hidden"
-    >
-      {/* Ambient glow */}
-      <div className="absolute top-0 left-1/4 w-80 h-80 bg-accent-500/10 rounded-full blur-[120px]" />
-      <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-purple-500/10 rounded-full blur-[120px]" />
-
-      <div className="relative z-10 flex flex-col md:flex-row items-center justify-center gap-10 md:gap-16 max-w-6xl w-full">
-        {/* Image with tilt effect */}
-        <motion.div
-          initial={{ opacity: 0, x: -60 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="w-full md:w-1/2 flex items-center justify-center"
+    <section ref={root} id="about" className="relative py-28 sm:py-40">
+      <div className="container-x">
+        <span className="eyebrow">{t("eyebrow")}</span>
+        <p
+          data-manifesto
+          className="manifesto mt-10 max-w-[1150px] text-[clamp(1.9rem,4.4vw,4.25rem)] font-medium leading-[1.1] tracking-[-0.035em] text-fg"
         >
-          <Tilt
-            glareEnable={true}
-            glareMaxOpacity={0.15}
-            glareColor="#818cf8"
-            glarePosition="all"
-            scale={1.02}
-            transitionSpeed={250}
-            className="rounded-2xl overflow-hidden glow"
+          {t.rich("manifesto", { em: (chunks) => <em>{chunks}</em> })}
+        </p>
+
+        <div className="mt-24 grid gap-12 sm:mt-32 lg:grid-cols-12 lg:gap-16">
+          <figure
+            data-photo
+            className="relative aspect-[4/5] max-h-[85svh] w-full overflow-hidden rounded-[28px] bg-surface sm:aspect-[3/2] lg:col-span-5 lg:aspect-[4/5]"
           >
-            <div className="relative">
+            <div data-photo-img className="absolute inset-0">
               <Image
-                src="/images/hackaton.png"
-                alt={t("altImage")}
-                width={500}
-                height={350}
-                className="object-cover rounded-2xl"
+                src="/images/mathyu.jpg"
+                alt={t("photoAlt")}
+                fill
+                sizes="(min-width: 1024px) 40vw, 100vw"
+                className="object-cover object-[50%_30%]"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent" />
             </div>
-          </Tilt>
-        </motion.div>
+            <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/80 to-transparent" />
+            <figcaption className="absolute bottom-5 left-5 right-5 flex items-center justify-between font-mono text-[11px] uppercase tracking-[0.2em] text-fg/80">
+              <span>Mathyu Cardozo</span>
+              <span>{t("photoCaption")}</span>
+            </figcaption>
+          </figure>
 
-        {/* Text content */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="w-full md:w-1/2 flex flex-col items-start text-left space-y-5"
-        >
-          <motion.div variants={childVariants} className="space-y-2">
-            <span className="text-sm tracking-[0.3em] uppercase text-accent-400 font-medium">
-              {t("subtitle")}
-            </span>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gradient">
-              {t("title")}
-            </h2>
-          </motion.div>
+          <div data-pillars className="flex flex-col justify-between gap-12 lg:col-span-7">
+            <div>
+              <h3 className="text-2xl font-semibold tracking-tight text-fg sm:text-3xl">
+                {t("pillarsTitle")}
+              </h3>
+              <div className="mt-10 grid gap-px overflow-hidden rounded-[28px] border border-white/[0.08] bg-white/[0.08] sm:grid-cols-2">
+                {pillars.map(({ key, icon: Icon }, i) => (
+                  <div key={key} data-pillar className="flex flex-col gap-4 bg-ink p-7 sm:p-8">
+                    <div className="flex items-center justify-between">
+                      <span className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] text-fg">
+                        <Icon className="h-5 w-5" />
+                      </span>
+                      <span className="font-mono text-xs text-subtle">0{i + 1}</span>
+                    </div>
+                    <h4 className="text-lg font-semibold text-fg">
+                      {t(`pillars.${key}.title`)}
+                    </h4>
+                    <p className="text-[15px] leading-relaxed text-muted">
+                      {t(`pillars.${key}.body`)}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
 
-          <motion.p
-            variants={childVariants}
-            className="text-base sm:text-lg text-slate-300 leading-relaxed"
-            style={{ textAlign: "justify" }}
-          >
-            {t("paragraph1")}
-          </motion.p>
-          <motion.p
-            variants={childVariants}
-            className="text-base sm:text-lg text-slate-400 leading-relaxed"
-            style={{ textAlign: "justify" }}
-          >
-            {t("paragraph2")}
-          </motion.p>
-
-          {/* Social & CV buttons */}
-          <motion.div
-            variants={childVariants}
-            className="mt-4 flex flex-wrap gap-3"
-          >
-            <a
-              href="https://www.linkedin.com/in/mathyu-cardozo-7325a51b5/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 glass rounded-xl text-accent-300 hover:text-white hover:border-accent-400/40 transition-all text-sm font-medium"
-              aria-label="LinkedIn"
-            >
-              <FaLinkedin className="w-4 h-4" />
-              {t("social.linkedin")}
-            </a>
-            <a
-              href="https://github.com/xMathyu"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 glass rounded-xl text-accent-300 hover:text-white hover:border-accent-400/40 transition-all text-sm font-medium"
-              aria-label="GitHub"
-            >
-              <FaGithub className="w-4 h-4" />
-              {t("social.github")}
-            </a>
-            <a
-              href="/mathyu-cv-es.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-accent-500 to-purple-500 text-white rounded-xl shadow-lg text-sm font-medium hover:shadow-accent-500/25 transition-all"
-              aria-label="Download CV"
-            >
-              <FaDownload className="w-4 h-4" />
-              {t("social.cv")}
-            </a>
-          </motion.div>
-        </motion.div>
+            <div className="flex flex-wrap gap-3">
+              <a
+                href="https://www.linkedin.com/in/mathyu-cardozo-7325a51b5/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-ghost"
+              >
+                <FaLinkedin className="h-4 w-4" />
+                {t("social.linkedin")}
+              </a>
+              <a
+                href="https://github.com/xMathyu"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-ghost"
+              >
+                <FaGithub className="h-4 w-4" />
+                {t("social.github")}
+              </a>
+              <a
+                href="/mathyu-cv-es.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary"
+              >
+                <FiDownload className="h-4 w-4" />
+                {t("social.cv")}
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

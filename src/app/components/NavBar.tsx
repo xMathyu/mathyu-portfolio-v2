@@ -1,220 +1,249 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
-import { useTranslations } from "next-intl";
+import { useEffect, useRef, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
+import { useLenis } from "lenis/react";
 import { useRouter, usePathname } from "@/i18n/navigation";
-import { useParams } from "next/navigation";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
-import ReactCountryFlag from "react-country-flag";
-import { motion, AnimatePresence } from "framer-motion";
+import { routing } from "@/i18n/routing";
+import { gsap, useGSAP, ScrollTrigger } from "@/app/lib/gsap";
+import { useIntro } from "./providers/IntroProvider";
+
+const SECTIONS = ["about", "work", "experience", "skills", "projects", "contact"] as const;
+
+type Locale = (typeof routing.locales)[number];
+
+function LocaleSwitch({
+  locale,
+  onChange,
+  label,
+}: {
+  locale: string;
+  onChange: (next: Locale) => void;
+  label: string;
+}) {
+  return (
+    <div
+      role="group"
+      aria-label={label}
+      className="flex rounded-full border border-white/10 p-0.5 font-mono text-[11px] uppercase"
+    >
+      {routing.locales.map((code) => (
+        <button
+          key={code}
+          type="button"
+          onClick={() => onChange(code)}
+          aria-pressed={locale === code}
+          className={`rounded-full px-2.5 py-1 transition-colors ${
+            locale === code ? "bg-white/15 text-fg" : "text-subtle hover:text-fg"
+          }`}
+        >
+          {code}
+        </button>
+      ))}
+    </div>
+  );
+}
 
 export function NavBar() {
   const t = useTranslations("NavBar");
+  const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
-  const { locale } = useParams();
+  const lenis = useLenis();
+  const { introDone } = useIntro();
 
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const header = useRef<HTMLElement>(null);
+  const pill = useRef<HTMLDivElement>(null);
+  const menu = useRef<HTMLDivElement>(null);
+  const menuTl = useRef<gsap.core.Timeline | null>(null);
+  const menuWasOpen = useRef(false);
+  const [open, setOpen] = useState(false);
+  const [active, setActive] = useState("");
+
+  useGSAP(() => {
+    gsap.set(header.current, { yPercent: -160 });
+
+    // Hide the pill while scrolling down, bring it back on the way up
+    const hide = gsap.to(pill.current, {
+      yPercent: -160,
+      duration: 0.45,
+      ease: "power3.out",
+      paused: true,
+    });
+    ScrollTrigger.create({
+      start: 0,
+      end: "max",
+      refreshPriority: -1,
+      onUpdate: (self) => {
+        if (self.scroll() < 200 || self.direction === -1) hide.reverse();
+        else hide.play();
+      },
+    });
+
+    // Highlight the link of the section currently in view
+    SECTIONS.forEach((id) => {
+      ScrollTrigger.create({
+        trigger: `#${id}`,
+        start: "top 50%",
+        end: "bottom 50%",
+        refreshPriority: -1,
+        onToggle: (self) =>
+          setActive((current) => (self.isActive ? id : current === id ? "" : current)),
+      });
+    });
+
+    const links = menu.current?.querySelectorAll("[data-menu-link]") ?? [];
+    menuTl.current = gsap
+      .timeline({ paused: true })
+      .set(menu.current, { visibility: "visible" })
+      .fromTo(
+        menu.current,
+        { clipPath: "circle(0% at calc(100% - 44px) 44px)" },
+        {
+          clipPath: "circle(150% at calc(100% - 44px) 44px)",
+          duration: 0.8,
+          ease: "power3.inOut",
+        },
+      )
+      .from(links, { yPercent: 110, duration: 0.8, ease: "expo.out", stagger: 0.05 }, 0.3)
+      .from(
+        menu.current?.querySelectorAll("[data-menu-foot]") ?? [],
+        { autoAlpha: 0, y: 12, duration: 0.5 },
+        0.5,
+      );
+  });
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setDropdownOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+    if (introDone) {
+      gsap.to(header.current, { yPercent: 0, duration: 1.2, ease: "expo.out", delay: 0.6 });
+    }
+  }, [introDone]);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    if (open) {
+      menuWasOpen.current = true;
+      lenis?.stop();
+      menuTl.current?.timeScale(1).play();
+    } else if (menuWasOpen.current) {
+      menuWasOpen.current = false;
+      lenis?.start();
+      menuTl.current?.timeScale(1.6).reverse();
+    }
+  }, [open, lenis]);
 
-  const navLinks = [
-    { href: "#home", label: t("links.home") },
-    { href: "#about", label: t("links.about") },
-    { href: "#experience", label: t("links.experience") },
-    { href: "#skills", label: t("links.skills") },
-    { href: "#projects", label: t("links.projects") },
-    { href: "#contact", label: t("links.contact") },
-  ];
-
-  const changeLocale = (newLocale: "en" | "es") => {
-    if (newLocale === locale) return;
-    router.replace(pathname, { locale: newLocale });
+  const changeLocale = (next: Locale) => {
+    if (next === locale) return;
+    router.replace(pathname, { locale: next });
   };
 
-  const currentFlag = locale === "en" ? "US" : "PE";
+  const goTo = (e: React.MouseEvent<HTMLAnchorElement>, hash: string) => {
+    e.preventDefault();
+    setOpen(false);
+    lenis?.start();
+    lenis?.scrollTo(hash, { duration: 1.4 });
+  };
 
   return (
-    <header
-      className={`sticky top-0 z-50 transition-all duration-300 ${
-        scrolled ? "glass shadow-lg shadow-black/10" : "bg-transparent"
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
+    <>
+      <header
+        ref={header}
+        className="pointer-events-none fixed inset-x-0 top-0 z-50 flex justify-center px-3 pt-3 sm:px-4 sm:pt-4"
+      >
+        <div
+          ref={pill}
+          className="pointer-events-auto flex w-full max-w-[1120px] items-center justify-between gap-4 rounded-full border border-white/10 bg-black/55 py-2 pl-4 pr-2 backdrop-blur-xl backdrop-saturate-150 sm:pl-5"
+        >
           <a
             href="#home"
-            className="text-xl font-bold text-gradient hover:opacity-80 transition-opacity"
+            className="flex items-center gap-2.5 text-sm font-semibold tracking-tight text-fg"
           >
+            <span className="bg-ai h-5 w-5 rounded-full shadow-[0_0_16px_rgba(201,89,221,0.6)]" />
             {t("logo")}
           </a>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex md:items-center md:space-x-1">
-            {navLinks.map((link) => (
+          <nav className="hidden items-center gap-0.5 lg:flex">
+            {SECTIONS.map((id) => (
               <a
-                key={link.href}
-                href={link.href}
-                className="relative px-4 py-2 text-sm font-medium text-slate-300 hover:text-white transition-colors group"
+                key={id}
+                href={`#${id}`}
+                aria-current={active === id ? "true" : undefined}
+                className={`rounded-full px-3.5 py-2 text-[13px] transition-colors duration-300 ${
+                  active === id ? "bg-white/[0.09] text-fg" : "text-muted hover:text-fg"
+                }`}
               >
-                {link.label}
-                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-accent-400 to-purple-400 group-hover:w-3/4 transition-all duration-300" />
+                {t(`links.${id}`)}
               </a>
             ))}
-
-            {/* Language dropdown */}
-            <div className="relative ml-4" ref={dropdownRef}>
-              <button
-                onClick={() => setDropdownOpen((prev) => !prev)}
-                className="p-2 rounded-lg hover:bg-white/5 transition-colors flex items-center"
-                aria-label="Toggle Language Dropdown"
-              >
-                <ReactCountryFlag
-                  countryCode={currentFlag}
-                  svg
-                  style={{ width: "1.3em", height: "1.3em" }}
-                />
-              </button>
-              <AnimatePresence>
-                {dropdownOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                    transition={{ duration: 0.15 }}
-                    className="absolute right-0 mt-2 w-36 glass rounded-xl overflow-hidden shadow-xl"
-                  >
-                    <button
-                      onClick={() => {
-                        changeLocale("en");
-                        setDropdownOpen(false);
-                      }}
-                      className="w-full px-4 py-2.5 text-left hover:bg-white/10 flex items-center gap-2 text-sm text-slate-300 hover:text-white transition-colors"
-                    >
-                      <ReactCountryFlag
-                        countryCode="US"
-                        svg
-                        style={{ width: "1.3em", height: "1.3em" }}
-                      />
-                      English
-                    </button>
-                    <button
-                      onClick={() => {
-                        changeLocale("es");
-                        setDropdownOpen(false);
-                      }}
-                      className="w-full px-4 py-2.5 text-left hover:bg-white/10 flex items-center gap-2 text-sm text-slate-300 hover:text-white transition-colors"
-                    >
-                      <ReactCountryFlag
-                        countryCode="PE"
-                        svg
-                        style={{ width: "1.3em", height: "1.3em" }}
-                      />
-                      Español
-                    </button>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
           </nav>
 
-          {/* Mobile Menu Button */}
-          <div className="flex md:hidden">
-            <button
-              onClick={() => setMobileMenuOpen((prev) => !prev)}
-              className="p-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/5 transition-colors"
-              aria-label="Toggle mobile menu"
+          <div className="flex items-center gap-2">
+            <div className="hidden sm:block">
+              <LocaleSwitch locale={locale} onChange={changeLocale} label={t("language")} />
+            </div>
+            <a
+              href="#contact"
+              className="hidden h-9 items-center rounded-full bg-fg px-4 text-[13px] font-medium text-ink transition-colors hover:bg-white sm:inline-flex"
             >
-              {mobileMenuOpen ? (
-                <XMarkIcon className="w-6 h-6" />
-              ) : (
-                <Bars3Icon className="w-6 h-6" />
-              )}
+              {t("hire")}
+            </a>
+            <button
+              type="button"
+              onClick={() => setOpen((prev) => !prev)}
+              aria-expanded={open}
+              aria-controls="mobile-menu"
+              aria-label={open ? t("close") : t("menu")}
+              className="relative flex h-9 w-9 items-center justify-center rounded-full border border-white/10 lg:hidden"
+            >
+              <span
+                className={`absolute h-px w-4 bg-fg transition-transform duration-500 ${
+                  open ? "rotate-45" : "-translate-y-[3px]"
+                }`}
+              />
+              <span
+                className={`absolute h-px w-4 bg-fg transition-transform duration-500 ${
+                  open ? "-rotate-45" : "translate-y-[3px]"
+                }`}
+              />
             </button>
           </div>
         </div>
-      </div>
+      </header>
 
-      {/* Mobile Navigation Panel */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.2 }}
-            className="md:hidden glass overflow-hidden"
-          >
-            <div className="pt-2 pb-4 space-y-1 px-4">
-              {navLinks.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  className="block px-4 py-2.5 text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {link.label}
-                </a>
-              ))}
-
-              {/* Language buttons in mobile */}
-              <div className="flex gap-2 px-4 pt-2">
-                <button
-                  onClick={() => {
-                    changeLocale("en");
-                    setMobileMenuOpen(false);
-                  }}
-                  className="flex items-center gap-2 px-3 py-2 text-sm text-slate-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
-                >
-                  <ReactCountryFlag
-                    countryCode="US"
-                    svg
-                    style={{ width: "1.3em", height: "1.3em" }}
-                  />
-                  EN
-                </button>
-                <button
-                  onClick={() => {
-                    changeLocale("es");
-                    setMobileMenuOpen(false);
-                  }}
-                  className="flex items-center gap-2 px-3 py-2 text-sm text-slate-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
-                >
-                  <ReactCountryFlag
-                    countryCode="PE"
-                    svg
-                    style={{ width: "1.3em", height: "1.3em" }}
-                  />
-                  ES
-                </button>
-              </div>
+      <div
+        ref={menu}
+        id="mobile-menu"
+        className="invisible fixed inset-0 z-40 flex flex-col justify-between bg-ink px-6 pb-10 pt-28 lg:hidden"
+      >
+        <nav className="flex flex-col">
+          {SECTIONS.map((id, i) => (
+            <div key={id} className="overflow-hidden">
+              <a
+                data-menu-link
+                href={`#${id}`}
+                onClick={(e) => goTo(e, `#${id}`)}
+                tabIndex={open ? 0 : -1}
+                className="flex items-baseline gap-4 py-1.5 text-[clamp(2.4rem,11vw,4rem)] font-semibold leading-tight tracking-[-0.04em] text-fg"
+              >
+                <span className="font-mono text-xs font-normal tracking-normal text-subtle">
+                  0{i + 1}
+                </span>
+                {t(`links.${id}`)}
+              </a>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </header>
+          ))}
+        </nav>
+        <div data-menu-foot className="flex items-center justify-between gap-4">
+          <LocaleSwitch locale={locale} onChange={changeLocale} label={t("language")} />
+          <a
+            href="#contact"
+            onClick={(e) => goTo(e, "#contact")}
+            tabIndex={open ? 0 : -1}
+            className="btn-primary"
+          >
+            {t("hire")}
+          </a>
+        </div>
+      </div>
+    </>
   );
 }

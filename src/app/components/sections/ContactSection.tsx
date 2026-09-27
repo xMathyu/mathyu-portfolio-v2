@@ -1,137 +1,194 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { FaLinkedin, FaPaperPlane } from "react-icons/fa";
 import emailjs from "@emailjs/browser";
 import { useTranslations } from "next-intl";
+import { FaGithub, FaLinkedin } from "react-icons/fa";
+import { FiArrowUpRight, FiDownload, FiSend } from "react-icons/fi";
+import { gsap, useGSAP, SplitText, MOTION_OK } from "@/app/lib/gsap";
+import { VIDEOS } from "@/app/lib/videos";
+import LazyVideo from "../ui/LazyVideo";
+import Magnetic from "../ui/Magnetic";
+
+const links = [
+  { key: "linkedin", href: "https://www.linkedin.com/in/mathyu-cardozo-7325a51b5/", icon: FaLinkedin },
+  { key: "github", href: "https://github.com/xMathyu", icon: FaGithub },
+  { key: "cv", href: "/mathyu-cv-es.pdf", icon: FiDownload },
+] as const;
 
 export default function ContactSection() {
-  const t = useTranslations("ContactSection");
+  const t = useTranslations("Contact");
+  const root = useRef<HTMLElement>(null);
+  const [sending, setSending] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia();
+      mm.add(MOTION_OK, () => {
+        SplitText.create("[data-contact-title]", {
+          type: "lines",
+          mask: "lines",
+          linesClass: "split-line",
+          autoSplit: true,
+          onSplit: (self) =>
+            gsap.from(self.lines, {
+              yPercent: 110,
+              duration: 1.3,
+              ease: "expo.out",
+              stagger: 0.1,
+              scrollTrigger: { trigger: "[data-contact-title]", start: "top 85%", once: true },
+            }),
+        });
+        gsap.from("[data-contact-fade]", {
+          autoAlpha: 0,
+          y: 30,
+          duration: 1.1,
+          ease: "power3.out",
+          stagger: 0.1,
+          delay: 0.2,
+          scrollTrigger: { trigger: "[data-contact-title]", start: "top 85%", once: true },
+        });
+      });
+    },
+    { scope: root },
+  );
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    emailjs
-      .sendForm(
+    const form = e.currentTarget;
+    setSending(true);
+    try {
+      await emailjs.sendForm(
         process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
         process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
-        e.currentTarget,
+        form,
         process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!,
-      )
-      .then(
-        (result) => {
-          console.log(result.text);
-          toast.success(t("toastSuccess"));
-        },
-        (error) => {
-          console.log(error.text);
-          toast.error(t("toastError"));
-        },
       );
-
-    e.currentTarget.reset();
+      toast.success(t("toastSuccess"));
+      form.reset();
+    } catch (error) {
+      console.error(error);
+      toast.error(t("toastError"));
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
-    <section
-      id="contact"
-      className="relative flex flex-col items-center justify-center px-4 py-24 overflow-hidden"
-    >
-      {/* Ambient glow */}
-      <div className="absolute bottom-0 left-1/3 w-96 h-96 bg-accent-500/10 rounded-full blur-[140px]" />
-      <div className="absolute top-1/4 right-1/4 w-72 h-72 bg-purple-500/8 rounded-full blur-[120px]" />
+    <section ref={root} id="contact" className="relative overflow-hidden py-28 sm:py-40">
+      <LazyVideo
+        clip={VIDEOS.particles}
+        className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-30 mix-blend-screen [mask-image:radial-gradient(ellipse_at_center,#000_30%,transparent_75%)]"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -bottom-72 left-1/2 h-[520px] w-[90%] max-w-5xl -translate-x-1/2 rounded-full opacity-25 blur-[140px]"
+        style={{ background: "linear-gradient(90deg,#0894ff,#c959dd,#ff2e54,#ff9004)" }}
+      />
+      <Toaster
+        position="bottom-center"
+        toastOptions={{
+          style: {
+            background: "#111114",
+            color: "#f5f5f7",
+            border: "1px solid rgba(255,255,255,0.1)",
+            borderRadius: "9999px",
+          },
+        }}
+      />
 
-      <Toaster position="bottom-center" />
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-        className="text-center mb-16 space-y-3"
-      >
-        <span className="text-sm tracking-[0.3em] uppercase text-accent-400 font-medium">
-          {t("sectionSubtitle")}
-        </span>
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gradient">
-          {t("sectionTitle")}
-        </h2>
-      </motion.div>
-
-      <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* LinkedIn Card */}
-        <motion.div
-          initial={{ opacity: 0, x: -30 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="flex flex-col items-center justify-center p-6 sm:p-8 glass rounded-2xl hover:glow transition-all duration-300"
-        >
-          <div className="w-16 h-16 rounded-2xl bg-accent-500/10 flex items-center justify-center mb-6">
-            <FaLinkedin className="w-8 h-8 text-accent-400" />
-          </div>
-          <p className="mb-6 text-base text-slate-300 text-center leading-relaxed">
-            {t("linkedinDescription")}
-          </p>
-          <motion.a
-            href="https://www.linkedin.com/in/mathyu-cardozo-7325a51b5/"
-            target="_blank"
-            rel="noopener noreferrer"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-accent-500 to-purple-500 text-white font-semibold rounded-full shadow-lg hover:shadow-accent-500/25 transition-all"
-            aria-label="LinkedIn"
+      <div className="container-x relative grid gap-16 lg:grid-cols-12 lg:gap-12">
+        <div className="lg:col-span-7">
+          <span data-contact-fade className="eyebrow">
+            {t("eyebrow")}
+          </span>
+          <h2
+            data-contact-title
+            className="mt-8 text-[clamp(2.4rem,6.2vw,6rem)] font-semibold leading-[0.95] tracking-tightest text-fg"
           >
-            <FaLinkedin className="w-5 h-5" />
-            {t("linkedinButton")}
-          </motion.a>
-        </motion.div>
+            {t.rich("title", { em: (chunks) => <em>{chunks}</em> })}
+          </h2>
+          <p data-contact-fade className="mt-8 max-w-xl text-lg leading-relaxed text-muted">
+            {t("body")}
+          </p>
 
-        {/* Contact Form */}
-        <motion.div
-          initial={{ opacity: 0, x: 30 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="flex flex-col p-6 sm:p-8 glass rounded-2xl hover:glow transition-all duration-300"
-        >
-          <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
-            <input
-              type="email"
-              name="user_email"
-              placeholder={t("formEmailPlaceholder")}
-              required
-              className="p-3.5 bg-white/5 border border-white/10 rounded-xl text-foreground placeholder:text-slate-500 focus:outline-none focus:border-accent-500/50 focus:ring-1 focus:ring-accent-500/30 transition-all"
-            />
-            <input
-              type="tel"
-              name="user_phone"
-              placeholder={t("formPhonePlaceholder")}
-              required
-              className="p-3.5 bg-white/5 border border-white/10 rounded-xl text-foreground placeholder:text-slate-500 focus:outline-none focus:border-accent-500/50 focus:ring-1 focus:ring-accent-500/30 transition-all"
-            />
-            <textarea
-              name="message"
-              placeholder={t("formMessagePlaceholder")}
-              rows={4}
-              required
-              className="p-3.5 bg-white/5 border border-white/10 rounded-xl text-foreground placeholder:text-slate-500 focus:outline-none focus:border-accent-500/50 focus:ring-1 focus:ring-accent-500/30 transition-all resize-none"
-            ></textarea>
-            <motion.button
-              type="submit"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="group relative px-6 py-3.5 rounded-xl bg-gradient-to-r from-accent-500 to-purple-500 text-white font-semibold shadow-lg overflow-hidden transition-all"
-            >
-              <span className="relative z-10 inline-flex items-center gap-2">
-                {t("submitButton")}
-                <FaPaperPlane className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-              </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-accent-400 to-pink-400 opacity-0 group-hover:opacity-100 transition-opacity" />
-            </motion.button>
+          <div data-contact-fade className="mt-12">
+            <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-subtle">
+              {t("reach")}
+            </p>
+            <ul className="mt-4 divide-y divide-white/[0.08] border-y border-white/[0.08]">
+              {links.map(({ key, href, icon: Icon }) => (
+                <li key={key}>
+                  <a
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex items-center justify-between py-5 text-xl font-medium text-fg transition-colors sm:text-2xl"
+                  >
+                    <span className="flex items-center gap-4">
+                      <Icon className="h-5 w-5 text-muted transition-colors group-hover:text-fg" />
+                      <span className="transition-transform duration-500 group-hover:translate-x-2">
+                        {t(key)}
+                      </span>
+                    </span>
+                    <FiArrowUpRight className="h-6 w-6 text-muted transition-all duration-500 group-hover:rotate-45 group-hover:text-fg" />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <div data-contact-fade className="lg:col-span-5 lg:pt-24">
+          <form
+            onSubmit={handleSubmit}
+            className="card flex flex-col gap-5 bg-surface/80 p-6 backdrop-blur-xl sm:p-8"
+          >
+            <h3 className="text-xl font-semibold tracking-[-0.02em] text-fg">{t("formTitle")}</h3>
+            <label className="flex flex-col gap-2">
+              <span className="text-sm text-muted">{t("email")}</span>
+              <input
+                type="email"
+                name="user_email"
+                placeholder={t("emailPlaceholder")}
+                required
+                autoComplete="email"
+                className="field"
+              />
+            </label>
+            <label className="flex flex-col gap-2">
+              <span className="text-sm text-muted">{t("phone")}</span>
+              <input
+                type="tel"
+                name="user_phone"
+                placeholder={t("phonePlaceholder")}
+                autoComplete="tel"
+                className="field"
+              />
+            </label>
+            <label className="flex flex-col gap-2">
+              <span className="text-sm text-muted">{t("message")}</span>
+              <textarea
+                name="message"
+                placeholder={t("messagePlaceholder")}
+                rows={5}
+                required
+                className="field resize-none"
+              />
+            </label>
+            <Magnetic strength={0.15} className="mt-2 w-full">
+              <button
+                type="submit"
+                disabled={sending}
+                className="btn-primary w-full justify-center disabled:cursor-wait disabled:opacity-60"
+              >
+                {sending ? t("sending") : t("submit")}
+                <FiSend className="h-4 w-4" />
+              </button>
+            </Magnetic>
           </form>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

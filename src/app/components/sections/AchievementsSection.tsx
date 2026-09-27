@@ -1,226 +1,197 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
-import {
-  FaCertificate,
-  FaTrophy,
-  FaGraduationCap,
-  FaLanguage,
-} from "react-icons/fa";
+import { FaMicrosoft, FaTrophy } from "react-icons/fa";
+import { FiAward, FiBookOpen, FiGlobe } from "react-icons/fi";
+import { gsap, useGSAP, MOTION_OK } from "@/app/lib/gsap";
+import SectionHeading from "../ui/SectionHeading";
+import { useSpotlight } from "../ui/useSpotlight";
 
 const certifications = [
-  {
-    key: "azure",
-    icon: "microsoft",
-    type: "cert",
-  },
-  {
-    key: "scrum",
-    icon: "cert",
-    type: "cert",
-  },
-  {
-    key: "izipay",
-    icon: "trophy",
-    type: "award",
-  },
-  {
-    key: "bcp",
-    icon: "trophy",
-    type: "award",
-  },
-];
+  { key: "azure", icon: FaMicrosoft },
+  { key: "scrum", icon: FiAward },
+] as const;
 
-const education = [{ key: "upc" }, { key: "icpna" }];
+const education = ["upc", "icpna"] as const;
 
 const languages = [
   { key: "english", level: 85 },
   { key: "spanish", level: 100 },
   { key: "portuguese", level: 30 },
-];
-
-const iconMap: Record<string, React.ReactNode> = {
-  microsoft: <FaCertificate className="w-6 h-6" />,
-  cert: <FaCertificate className="w-6 h-6" />,
-  trophy: <FaTrophy className="w-6 h-6" />,
-};
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 30, scale: 0.95 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { duration: 0.5, delay: i * 0.1 },
-  }),
-};
+] as const;
 
 export default function AchievementsSection() {
-  const t = useTranslations("AchievementsSection");
+  const t = useTranslations("Achievements");
+  const root = useRef<HTMLElement>(null);
+  const grid = useRef<HTMLDivElement>(null);
+  useSpotlight(grid);
+
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia();
+      mm.add(MOTION_OK, () => {
+        gsap.from("[data-ach]", {
+          autoAlpha: 0,
+          y: 60,
+          scale: 0.97,
+          duration: 1.2,
+          ease: "expo.out",
+          stagger: 0.08,
+          scrollTrigger: { trigger: grid.current, start: "top 80%", once: true },
+        });
+        gsap.from("[data-lang-bar]", {
+          scaleX: 0,
+          duration: 1.4,
+          ease: "power3.out",
+          stagger: 0.12,
+          scrollTrigger: { trigger: "[data-lang-bar]", start: "top 90%", once: true },
+        });
+        gsap.fromTo(
+          "[data-ach-photo]",
+          { scale: 1.2 },
+          {
+            scale: 1,
+            ease: "none",
+            scrollTrigger: {
+              trigger: "[data-ach-photo]",
+              start: "top bottom",
+              end: "bottom top",
+              scrub: true,
+            },
+          },
+        );
+      });
+    },
+    { scope: root },
+  );
 
   return (
-    <section
-      id="achievements"
-      className="relative flex flex-col items-center px-4 py-24 overflow-hidden"
-    >
-      {/* Ambient glow */}
-      <div className="absolute top-1/4 right-1/4 w-80 h-80 bg-accent-500/10 rounded-full blur-[140px]" />
-      <div className="absolute bottom-1/4 left-1/4 w-80 h-80 bg-pink-400/10 rounded-full blur-[140px]" />
+    <section ref={root} id="achievements" className="relative py-28 sm:py-40">
+      <div className="container-x">
+        <SectionHeading
+          eyebrow={t("eyebrow")}
+          title={t.rich("title", { em: (chunks) => <em>{chunks}</em> })}
+        />
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-        className="text-center mb-16 space-y-3"
-      >
-        <span className="text-sm tracking-[0.3em] uppercase text-accent-400 font-medium">
-          {t("subtitle")}
-        </span>
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gradient">
-          {t("title")}
-        </h2>
-      </motion.div>
-
-      <div className="w-full max-w-6xl space-y-16">
-        {/* Certifications & Awards */}
-        <div>
-          <motion.h3
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="text-xl font-bold text-foreground mb-8 flex items-center gap-3"
+        <div
+          ref={grid}
+          className="spotlight-group mt-16 grid gap-4 md:grid-cols-2 lg:grid-cols-6"
+        >
+          {/* Hackathons */}
+          <article
+            data-ach
+            className="card spotlight flex min-h-[460px] flex-col justify-end md:col-span-2 lg:col-span-3 lg:row-span-2"
           >
-            <FaCertificate className="text-accent-400" />
-            {t("certsTitle")}
-          </motion.h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {certifications.map((cert, i) => (
-              <motion.div
-                key={cert.key}
-                custom={i}
-                variants={cardVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                className="glass rounded-2xl p-6 hover:glow transition-all duration-300 group"
-              >
-                <div className="flex items-start gap-4">
-                  <div
-                    className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${
-                      cert.type === "award"
-                        ? "bg-yellow-500/10 text-yellow-400"
-                        : "bg-accent-500/10 text-accent-400"
-                    }`}
-                  >
-                    {iconMap[cert.icon]}
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-foreground group-hover:text-accent-300 transition-colors">
-                      {t(`certs.${cert.key}.name`)}
-                    </h4>
-                    <p className="text-sm text-slate-400 mt-1">
-                      {t(`certs.${cert.key}.issuer`)}
-                    </p>
-                    {cert.type === "award" && (
-                      <span className="inline-flex items-center gap-1 mt-2 text-xs px-2.5 py-1 rounded-full bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">
-                        <FaTrophy className="w-3 h-3" />
-                        {t("winner")}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
+            <div data-ach-photo className="absolute inset-0">
+              <Image
+                src="/images/hackaton.png"
+                alt={t("hackathonAlt")}
+                fill
+                sizes="(min-width: 1024px) 50vw, 100vw"
+                className="object-cover"
+              />
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black/10" />
+            <div className="relative flex flex-col gap-4 p-7 sm:p-9">
+              <span className="inline-flex w-fit items-center gap-2 rounded-full border border-amber-300/30 bg-amber-300/10 px-3 py-1 text-xs font-medium text-amber-200 backdrop-blur-md">
+                <FaTrophy className="h-3 w-3" />
+                {t("winner")} · BCP · Izipay
+              </span>
+              <h3 className="text-3xl font-semibold tracking-[-0.03em] text-fg sm:text-5xl">
+                {t("hackathonTitle")}
+              </h3>
+              <p className="max-w-md text-[15px] leading-relaxed text-fg/75 sm:text-base">
+                {t("hackathonBody")}
+              </p>
+            </div>
+          </article>
 
-        {/* Education */}
-        <div>
-          <motion.h3
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="text-xl font-bold text-foreground mb-8 flex items-center gap-3"
-          >
-            <FaGraduationCap className="text-accent-400" />
-            {t("educationTitle")}
-          </motion.h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {education.map((edu, i) => (
-              <motion.div
-                key={edu.key}
-                custom={i}
-                variants={cardVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                className="glass rounded-2xl p-6 hover:glow transition-all duration-300"
-              >
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400">
-                    <FaGraduationCap className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-foreground">
-                      {t(`education.${edu.key}.degree`)}
-                    </h4>
-                    <p className="text-sm text-accent-400">
-                      {t(`education.${edu.key}.institution`)}
-                    </p>
-                  </div>
-                </div>
-                <p className="text-xs text-slate-500">
-                  {t(`education.${edu.key}.period`)}
+          {/* Certifications */}
+          {certifications.map(({ key, icon: Icon }) => (
+            <article
+              key={key}
+              data-ach
+              className="card spotlight flex flex-col justify-between gap-10 p-7 sm:p-8 lg:col-span-3"
+            >
+              <div className="flex items-center justify-between">
+                <span className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] text-fg">
+                  <Icon className="h-5 w-5" />
+                </span>
+                <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-subtle">
+                  {t("certification")}
+                </span>
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold leading-snug tracking-[-0.02em] text-fg sm:text-2xl">
+                  {t(`certs.${key}.name`)}
+                </h3>
+                <p className="mt-2 text-sm text-muted">{t(`certs.${key}.issuer`)}</p>
+              </div>
+            </article>
+          ))}
+
+          {/* Education */}
+          {education.map((key) => (
+            <article
+              key={key}
+              data-ach
+              className="card spotlight flex flex-col justify-between gap-10 p-7 sm:p-8 lg:col-span-2"
+            >
+              <div className="flex items-center justify-between">
+                <span className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] text-fg">
+                  <FiBookOpen className="h-5 w-5" />
+                </span>
+                <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-subtle">
+                  {t("education")}
+                </span>
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold tracking-[-0.02em] text-fg">
+                  {t(`educationItems.${key}.degree`)}
+                </h3>
+                <p className="mt-2 text-sm text-muted">
+                  {t(`educationItems.${key}.institution`)}
                 </p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-
-        {/* Languages */}
-        <div>
-          <motion.h3
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="text-xl font-bold text-foreground mb-8 flex items-center gap-3"
-          >
-            <FaLanguage className="text-accent-400" />
-            {t("languagesTitle")}
-          </motion.h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {languages.map((lang, i) => (
-              <motion.div
-                key={lang.key}
-                custom={i}
-                variants={cardVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                className="glass rounded-2xl p-6 hover:glow transition-all duration-300"
-              >
-                <h4 className="font-bold text-foreground mb-2">
-                  {t(`languages.${lang.key}.name`)}
-                </h4>
-                <p className="text-xs text-slate-400 mb-3">
-                  {t(`languages.${lang.key}.level`)}
+                <p className="mt-4 font-mono text-xs text-subtle">
+                  {t(`educationItems.${key}.period`)}
                 </p>
-                <div className="w-full h-2 rounded-full bg-white/5 overflow-hidden">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    whileInView={{ width: `${lang.level}%` }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 1, delay: 0.3 + i * 0.1 }}
-                    className="h-full rounded-full bg-gradient-to-r from-accent-500 to-purple-500"
-                  />
-                </div>
-              </motion.div>
-            ))}
-          </div>
+              </div>
+            </article>
+          ))}
+
+          {/* Languages */}
+          <article
+            data-ach
+            className="card spotlight flex flex-col gap-8 p-7 sm:p-8 md:col-span-2 lg:col-span-2"
+          >
+            <div className="flex items-center justify-between">
+              <span className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] text-fg">
+                <FiGlobe className="h-5 w-5" />
+              </span>
+              <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-subtle">
+                {t("languagesTitle")}
+              </span>
+            </div>
+            <ul className="flex flex-col gap-5">
+              {languages.map((lang) => (
+                <li key={lang.key}>
+                  <div className="flex items-baseline justify-between">
+                    <span className="font-medium text-fg">{t(`languages.${lang.key}.name`)}</span>
+                    <span className="text-xs text-muted">{t(`languages.${lang.key}.level`)}</span>
+                  </div>
+                  <span className="mt-2 block h-1 w-full overflow-hidden rounded-full bg-white/10">
+                    <span
+                      data-lang-bar
+                      className="bg-ai block h-full origin-left rounded-full"
+                      style={{ width: `${lang.level}%` }}
+                    />
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </article>
         </div>
       </div>
     </section>

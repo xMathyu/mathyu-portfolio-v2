@@ -8,39 +8,46 @@ export default {
   ],
   theme: {
     extend: {
+      screens: {
+        // Scroll-pinned storytelling only when there is motion and enough height for it;
+        // short screens (landscape phones, tiny phones) get the static stacked layout.
+        pin: { raw: "(prefers-reduced-motion: no-preference) and (min-height: 600px)" },
+        nopin: { raw: "(prefers-reduced-motion: reduce), (max-height: 599.98px)" },
+      },
       colors: {
-        background: "#0a0a0f",
-        foreground: "#e2e8f0",
-        accent: {
-          50: "#eef2ff",
-          100: "#e0e7ff",
-          200: "#c7d2fe",
-          300: "#a5b4fc",
-          400: "#818cf8",
-          500: "#6366f1",
-          600: "#4f46e5",
-          700: "#4338ca",
-          800: "#3730a3",
-          900: "#312e81",
+        ink: "#000000",
+        surface: "#0b0b0e",
+        fg: "#f5f5f7",
+        muted: "#a1a1a6",
+        subtle: "#6e6e73",
+        live: "#30d158",
+        ai: {
+          blue: "#0894ff",
+          purple: "#c959dd",
+          pink: "#ff2e54",
+          orange: "#ff9004",
         },
-        purple: {
-          400: "#c084fc",
-          500: "#a855f7",
+      },
+      fontFamily: {
+        sans: ["var(--font-geist)", "ui-sans-serif", "system-ui", "sans-serif"],
+        mono: ["var(--font-geist-mono)", "ui-monospace", "monospace"],
+        serif: ["var(--font-serif)", "ui-serif", "Georgia", "serif"],
+      },
+      letterSpacing: {
+        tightest: "-0.055em",
+      },
+      keyframes: {
+        "spin-slow": {
+          to: { transform: "rotate(360deg)" },
         },
-        pink: {
-          400: "#e879f9",
-          500: "#d946ef",
+        "scroll-cue": {
+          "0%": { transform: "translateY(-100%)" },
+          "100%": { transform: "translateY(200%)" },
         },
       },
       animation: {
-        "pulse-slow": "pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-        float: "float 6s ease-in-out infinite",
-      },
-      keyframes: {
-        float: {
-          "0%, 100%": { transform: "translateY(0px)" },
-          "50%": { transform: "translateY(-20px)" },
-        },
+        "spin-slow": "spin-slow 14s linear infinite",
+        "scroll-cue": "scroll-cue 1.8s cubic-bezier(0.65, 0, 0.35, 1) infinite",
       },
     },
   },
