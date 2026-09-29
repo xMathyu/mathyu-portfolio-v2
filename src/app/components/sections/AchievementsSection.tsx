@@ -34,11 +34,14 @@ export default function AchievementsSection() {
       mm.add(MOTION_OK, () => {
         gsap.from("[data-ach]", {
           autoAlpha: 0,
-          y: 60,
-          scale: 0.97,
-          duration: 1.2,
+          y: 90,
+          rotationX: 38,
+          scale: 0.92,
+          transformPerspective: 1100,
+          transformOrigin: "50% 100%",
+          duration: 1.4,
           ease: "expo.out",
-          stagger: 0.08,
+          stagger: { each: 0.09, from: "start" },
           scrollTrigger: { trigger: grid.current, start: "top 80%", once: true },
         });
         gsap.from("[data-lang-bar]", {
@@ -71,6 +74,7 @@ export default function AchievementsSection() {
     <section ref={root} id="achievements" className="relative py-28 sm:py-40">
       <div className="container-x">
         <SectionHeading
+          index="07"
           eyebrow={t("eyebrow")}
           title={t.rich("title", { em: (chunks) => <em>{chunks}</em> })}
         />
@@ -82,6 +86,7 @@ export default function AchievementsSection() {
           {/* Hackathons */}
           <article
             data-ach
+            data-tilt
             className="card spotlight flex min-h-[460px] flex-col justify-end md:col-span-2 lg:col-span-3 lg:row-span-2"
           >
             <div data-ach-photo className="absolute inset-0">
@@ -113,6 +118,7 @@ export default function AchievementsSection() {
             <article
               key={key}
               data-ach
+              data-tilt
               className="card spotlight flex flex-col justify-between gap-10 p-7 sm:p-8 lg:col-span-3"
             >
               <div className="flex items-center justify-between">
@@ -137,6 +143,7 @@ export default function AchievementsSection() {
             <article
               key={key}
               data-ach
+              data-tilt
               className="card spotlight flex flex-col justify-between gap-10 p-7 sm:p-8 lg:col-span-2"
             >
               <div className="flex items-center justify-between">
@@ -164,6 +171,7 @@ export default function AchievementsSection() {
           {/* Languages */}
           <article
             data-ach
+            data-tilt
             className="card spotlight flex flex-col gap-8 p-7 sm:p-8 md:col-span-2 lg:col-span-2"
           >
             <div className="flex items-center justify-between">

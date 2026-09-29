@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
 import { FiArrowUpRight, FiDownload } from "react-icons/fi";
-import { gsap, useGSAP, ScrollTrigger, SplitText, MOTION_OK } from "@/app/lib/gsap";
+import { gsap, useGSAP, ScrollTrigger, SplitText, MOTION_OK, FINE_POINTER } from "@/app/lib/gsap";
 import { useIntro } from "../providers/IntroProvider";
 import Magnetic from "../ui/Magnetic";
 
@@ -62,14 +62,30 @@ export default function HeroSection() {
             },
             0.5,
           );
+        // Once the letters have risen, let them leave their line masks
+        tl.eventCallback("onComplete", () => gsap.set(split.masks, { overflow: "visible" }));
         intro.current = tl;
         if (introDoneRef.current) tl.play();
 
-        // Scroll-out: copy drifts up and dissolves while the orb swells
+        // Scroll-out: the name bursts apart letter by letter, then the copy dissolves
+        gsap.to(split.chars, {
+          x: () => gsap.utils.random(-0.35, 0.35) * window.innerWidth,
+          y: () => gsap.utils.random(-0.7, -0.15) * window.innerHeight,
+          rotation: () => gsap.utils.random(-120, 120),
+          scale: () => gsap.utils.random(0.4, 1.8),
+          ease: "power1.in",
+          scrollTrigger: {
+            trigger: root.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: 1,
+            invalidateOnRefresh: true,
+          },
+        });
         gsap.to("[data-hero-content]", {
           yPercent: -14,
           autoAlpha: 0,
-          ease: "none",
+          ease: "power1.in",
           scrollTrigger: {
             trigger: root.current,
             start: "top top",
@@ -78,8 +94,32 @@ export default function HeroSection() {
           },
         });
 
+        // Letters near the pointer lift toward it
+        const cleanups: Array<() => void> = [];
+        if (window.matchMedia(FINE_POINTER).matches) {
+          const chars = split.chars as HTMLElement[];
+          const lifts = chars.map((c) => gsap.quickTo(c, "yPercent", { duration: 0.6, ease: "power3" }));
+          const onMove = (e: PointerEvent) => {
+            if (tl.isActive() || window.scrollY > 40) return;
+            chars.forEach((c, i) => {
+              const r = c.getBoundingClientRect();
+              const d = Math.hypot(e.clientX - (r.left + r.width / 2), e.clientY - (r.top + r.height / 2));
+              lifts[i](-22 * Math.max(0, 1 - d / 220));
+            });
+          };
+          const onLeave = () => lifts.forEach((lift) => lift(0));
+          const title = root.current?.querySelector<HTMLElement>("[data-hero-title]");
+          title?.addEventListener("pointermove", onMove);
+          title?.addEventListener("pointerleave", onLeave);
+          cleanups.push(() => {
+            title?.removeEventListener("pointermove", onMove);
+            title?.removeEventListener("pointerleave", onLeave);
+          });
+        }
+
         return () => {
           intro.current = null;
+          cleanups.forEach((fn) => fn());
         };
       });
     },

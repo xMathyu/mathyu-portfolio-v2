@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { gsap, useGSAP, ScrollTrigger, MOTION_OK } from "@/app/lib/gsap";
+import { gsap, useGSAP, ScrollTrigger, Draggable, MOTION_OK } from "@/app/lib/gsap";
 
 // `height` compensates for the padding baked into some logo files;
 // `opaque` logos ship with a white background and need a different filter.
@@ -56,6 +56,35 @@ export default function CompaniesSection() {
           },
         });
 
+        // Grab and fling the logos; the loop picks up again where the throw lands
+        const el = track.current;
+        const area = root.current?.querySelector<HTMLElement>("[data-companies-drag]");
+        if (el && area) {
+          const wrap = gsap.utils.wrap(0, 1);
+          const proxy = document.createElement("div");
+          let start = 0;
+          const seek = function (this: Draggable) {
+            loop.progress(wrap(start - (this.x - this.startX) / (el.scrollWidth / 2)));
+          };
+          Draggable.create(proxy, {
+            type: "x",
+            trigger: area,
+            inertia: true,
+            onPress() {
+              loop.pause();
+              start = loop.progress();
+              gsap.set(proxy, { x: 0 });
+              this.update();
+            },
+            onDrag: seek,
+            onThrowUpdate: seek,
+            onRelease() {
+              if (!this.isThrowing) loop.play();
+            },
+            onThrowComplete: () => void loop.play(),
+          });
+        }
+
         gsap.from("[data-companies-head]", {
           autoAlpha: 0,
           y: 20,
@@ -87,7 +116,7 @@ export default function CompaniesSection() {
         </h2>
       </div>
 
-      <div className="fade-x relative">
+      <div data-companies-drag data-cursor={t("drag")} className="fade-x relative cursor-grab touch-pan-y active:cursor-grabbing">
         <div ref={track} className="marquee-track flex w-max">
           {[0, 1].map((copy) => (
             <ul

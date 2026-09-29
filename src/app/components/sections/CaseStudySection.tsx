@@ -110,6 +110,7 @@ export default function CaseStudySection() {
     <section ref={root} id="work" className="relative">
       <div className="container-x pt-28 sm:pt-36">
         <SectionHeading
+          index="03"
           eyebrow={t("eyebrow")}
           title={t.rich("title", { em: (chunks) => <em>{chunks}</em> })}
           description={t("intro")}
@@ -118,7 +119,7 @@ export default function CaseStudySection() {
 
       <div className="mt-16 sm:mt-24">
         <ScrubVideo
-          clip={VIDEOS.datacenter}
+          clip={VIDEOS.sinfonia}
           lines={[t("reel.l1"), t("reel.l2"), t("reel.l3")]}
           caption={t("reel.caption")}
         />

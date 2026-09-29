@@ -26,20 +26,47 @@ export default function ContactSection() {
     () => {
       const mm = gsap.matchMedia();
       mm.add(MOTION_OK, () => {
-        SplitText.create("[data-contact-title]", {
-          type: "lines",
+        const title = root.current?.querySelector<HTMLElement>("[data-contact-title]");
+        let chars: Element[] = [];
+        SplitText.create(title!, {
+          type: "lines,chars",
           mask: "lines",
           linesClass: "split-line",
           autoSplit: true,
-          onSplit: (self) =>
-            gsap.from(self.lines, {
+          onSplit: (self) => {
+            chars = self.chars;
+            return gsap.from(self.lines, {
               yPercent: 110,
               duration: 1.3,
               ease: "expo.out",
               stagger: 0.1,
-              scrollTrigger: { trigger: "[data-contact-title]", start: "top 85%", once: true },
-            }),
+              scrollTrigger: { trigger: title, start: "top 85%", once: true },
+              // Free the letters so the hover wave isn't clipped
+              onComplete: () => void gsap.set(self.masks, { overflow: "visible" }),
+            });
+          },
         });
+
+        // Hover: a wave runs through the headline
+        const wave = () =>
+          gsap.to(chars, {
+            keyframes: { yPercent: [0, -22, 0], easeEach: "sine.inOut" },
+            duration: 0.7,
+            stagger: 0.018,
+            overwrite: true,
+          });
+        title?.addEventListener("pointerenter", wave);
+
+        // A giant "hire me" band slides across as the section scrolls by
+        gsap.fromTo(
+          "[data-hire-band]",
+          { xPercent: 0 },
+          {
+            xPercent: -40,
+            ease: "none",
+            scrollTrigger: { trigger: root.current, start: "top bottom", end: "bottom top", scrub: 0.6 },
+          },
+        );
         gsap.from("[data-contact-fade]", {
           autoAlpha: 0,
           y: 30,
@@ -49,6 +76,8 @@ export default function ContactSection() {
           delay: 0.2,
           scrollTrigger: { trigger: "[data-contact-title]", start: "top 85%", once: true },
         });
+
+        return () => title?.removeEventListener("pointerenter", wave);
       });
     },
     { scope: root },
@@ -78,7 +107,7 @@ export default function ContactSection() {
   return (
     <section ref={root} id="contact" className="relative overflow-hidden py-28 sm:py-40">
       <LazyVideo
-        clip={VIDEOS.particles}
+        clip={VIDEOS.contact}
         className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-30 mix-blend-screen [mask-image:radial-gradient(ellipse_at_center,#000_30%,transparent_75%)]"
       />
       <div
@@ -97,6 +126,20 @@ export default function ContactSection() {
           },
         }}
       />
+
+      <div aria-hidden="true" className="pointer-events-none relative mb-16 overflow-hidden sm:mb-24">
+        <p
+          data-hire-band
+          className="whitespace-nowrap text-[clamp(5rem,17vw,17rem)] font-black uppercase leading-[0.85] tracking-tightest text-transparent [-webkit-text-stroke:1.5px_rgba(255,255,255,0.18)]"
+        >
+          {Array.from({ length: 4 }, (_, i) => (
+            <span key={i} className="mr-[0.25em]">
+              {t("band")}
+              <span className="text-ai [-webkit-text-stroke:0]"> ✦ </span>
+            </span>
+          ))}
+        </p>
+      </div>
 
       <div className="container-x relative grid gap-16 lg:grid-cols-12 lg:gap-12">
         <div className="lg:col-span-7">

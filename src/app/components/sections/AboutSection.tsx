@@ -6,6 +6,8 @@ import { useTranslations } from "next-intl";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { FiCloud, FiCpu, FiDownload, FiLayers, FiUsers } from "react-icons/fi";
 import { gsap, useGSAP, SplitText, MOTION_OK } from "@/app/lib/gsap";
+import { VIDEOS } from "@/app/lib/videos";
+import LazyVideo from "../ui/LazyVideo";
 
 const pillars = [
   { key: "ownership", icon: FiLayers },
@@ -43,6 +45,28 @@ export default function AboutSection() {
               },
             ),
         });
+
+        gsap.to("[data-manifesto] em", {
+          backgroundSize: "100% 0.08em",
+          ease: "none",
+          stagger: 0.5,
+          scrollTrigger: {
+            trigger: "[data-manifesto]",
+            start: "top 70%",
+            end: "bottom 45%",
+            scrub: true,
+          },
+        });
+
+        gsap.fromTo(
+          "[data-manifesto-media]",
+          { yPercent: -8 },
+          {
+            yPercent: 8,
+            ease: "none",
+            scrollTrigger: { trigger: root.current, start: "top bottom", end: "center top", scrub: true },
+          },
+        );
 
         gsap.fromTo(
           "[data-photo]",
@@ -88,7 +112,17 @@ export default function AboutSection() {
 
   return (
     <section ref={root} id="about" className="relative py-28 sm:py-40">
-      <div className="container-x">
+      {/* Atmospheric footage behind the manifesto, faded into the page at both edges */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[min(130svh,80rem)] overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,#000_18%,#000_62%,transparent)]"
+      >
+        <div data-manifesto-media className="absolute inset-x-0 -inset-y-[12%]">
+          <LazyVideo clip={VIDEOS.manifesto} className="h-full w-full object-cover opacity-45" />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-black/60" />
+      </div>
+      <div className="container-x relative">
         <span className="eyebrow">{t("eyebrow")}</span>
         <p
           data-manifesto
@@ -100,6 +134,7 @@ export default function AboutSection() {
         <div className="mt-24 grid gap-12 sm:mt-32 lg:grid-cols-12 lg:gap-16">
           <figure
             data-photo
+          data-skew="y"
             className="relative aspect-[4/5] max-h-[85svh] w-full overflow-hidden rounded-[28px] bg-surface sm:aspect-[3/2] lg:col-span-5 lg:aspect-[4/5]"
           >
             <div data-photo-img className="absolute inset-0">

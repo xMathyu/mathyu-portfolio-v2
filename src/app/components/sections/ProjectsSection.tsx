@@ -5,7 +5,9 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { FiArrowUpRight } from "react-icons/fi";
 import { gsap, useGSAP, MOTION_OK } from "@/app/lib/gsap";
+import { PROJECT_VIDEOS } from "@/app/lib/videos";
 import SectionHeading from "../ui/SectionHeading";
+import LazyVideo from "../ui/LazyVideo";
 
 const projects = [
   {
@@ -126,18 +128,65 @@ export default function ProjectsSection() {
               },
             },
           );
+
+          // Coverflow: cards swing in, face you at the center, swing out
+          gsap.set(card, { transformPerspective: 1400, transformOrigin: "50% 50%" });
+          gsap.to(card, {
+            keyframes: {
+              rotationY: [-32, 0, 0, 30],
+              scale: [0.84, 1, 1, 0.86],
+              filter: ["brightness(0.45)", "brightness(1)", "brightness(1)", "brightness(0.45)"],
+              easeEach: "sine.inOut",
+            },
+            ease: "none",
+            scrollTrigger: {
+              trigger: card,
+              containerAnimation: slide,
+              start: "left right",
+              end: "right left",
+              scrub: true,
+            },
+          });
+
+          // Copy slides up once the card is centered
+          gsap.from(card.querySelectorAll("[data-project-copy] > *"), {
+            autoAlpha: 0,
+            y: 50,
+            stagger: 0.06,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: card,
+              containerAnimation: slide,
+              start: "left 70%",
+              end: "left 25%",
+              scrub: true,
+            },
+          });
         });
       });
 
-      // Mobile / tablet: simple reveal as each card enters
+      // Mobile / tablet: cards rise and unfold in 3D as they enter
       mm.add(`${MOTION_OK} and (max-width: 1023px)`, () => {
         gsap.utils.toArray<HTMLElement>("[data-project-card]").forEach((card) => {
           gsap.from(card, {
             autoAlpha: 0,
-            y: 60,
-            duration: 1.1,
+            y: 80,
+            rotationX: 28,
+            scale: 0.92,
+            transformPerspective: 1100,
+            transformOrigin: "50% 100%",
+            duration: 1.3,
             ease: "expo.out",
-            scrollTrigger: { trigger: card, start: "top 85%", once: true },
+            scrollTrigger: { trigger: card, start: "top 88%", once: true },
+          });
+          gsap.from(card.querySelectorAll("[data-project-copy] > *"), {
+            autoAlpha: 0,
+            y: 30,
+            stagger: 0.08,
+            duration: 1,
+            delay: 0.2,
+            ease: "power3.out",
+            scrollTrigger: { trigger: card, start: "top 80%", once: true },
           });
         });
       });
@@ -153,6 +202,7 @@ export default function ProjectsSection() {
       >
         <div className="container-x mb-12 flex flex-col gap-8 lg:mb-10 lg:flex-row lg:items-end lg:justify-between">
           <SectionHeading
+          index="06"
             eyebrow={t("eyebrow")}
             title={t.rich("title", { em: (chunks) => <em>{chunks}</em> })}
             description={t("intro")}
@@ -180,9 +230,9 @@ export default function ProjectsSection() {
               rel="noopener noreferrer"
               data-project-card
               data-cursor={t("visit")}
-              className="group relative block aspect-[4/5] w-full flex-shrink-0 overflow-hidden rounded-[32px] border border-white/[0.08] bg-surface sm:aspect-[16/10] lg:aspect-auto lg:h-[min(64svh,38.75rem)] lg:w-[min(70vw,62.5rem)]"
+              className="group relative flex w-full flex-shrink-0 flex-col overflow-hidden rounded-[32px] border border-white/[0.08] bg-surface sm:block sm:aspect-[16/10] lg:aspect-auto lg:h-[min(64svh,38.75rem)] lg:w-[min(70vw,62.5rem)]"
             >
-              <div data-project-img className="absolute inset-y-0 -inset-x-[8%]">
+              <div data-project-img className="relative aspect-[16/10] w-full overflow-hidden sm:absolute sm:inset-y-0 sm:-inset-x-[8%] sm:aspect-auto sm:w-auto sm:overflow-visible">
                 <Image
                   src={project.image}
                   alt={project.title}
@@ -190,14 +240,21 @@ export default function ProjectsSection() {
                   sizes="(min-width: 1024px) 75vw, 100vw"
                   className={`transition-transform duration-[1.2s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.04] ${
                     "portrait" in project
-                      ? "object-contain object-[85%_20%] sm:object-right-top"
+                      ? "object-cover object-top sm:object-contain sm:object-right-top"
                       : "object-cover object-left-top"
                   }`}
                 />
+                {/* Screen recording of the live site plays over the screenshot while in view */}
+                {PROJECT_VIDEOS[project.key] && (
+                  <LazyVideo
+                    clip={PROJECT_VIDEOS[project.key]!}
+                    className="absolute inset-0 h-full w-full object-cover object-top transition-transform duration-[1.2s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.04]"
+                  />
+                )}
               </div>
               <div
-                className={`absolute inset-x-0 bottom-0 bg-gradient-to-t from-black to-transparent ${
-                  // Portrait screenshots sit behind the copy on small screens, so darken them more
+                className={`absolute inset-x-0 bottom-0 hidden bg-gradient-to-t from-black to-transparent sm:block ${
+                  // Portrait screenshots sit behind the copy on tablets, so darken them more
                   "portrait" in project
                     ? "h-full via-black/85 lg:h-3/4 lg:via-black/70"
                     : "h-3/4 via-black/70"
@@ -209,7 +266,7 @@ export default function ProjectsSection() {
                 style={{ background: project.glow }}
               />
 
-              <div className="absolute inset-x-0 bottom-0 flex flex-col gap-5 p-6 sm:p-10">
+              <div data-project-copy className="relative flex flex-col gap-5 p-6 sm:absolute sm:inset-x-0 sm:bottom-0 sm:p-10">
                 <div className="flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.2em] text-fg/70">
                   <span>{pad(i + 1)}</span>
                   <span className="h-px w-6 bg-white/30" />

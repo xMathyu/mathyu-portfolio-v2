@@ -10,6 +10,8 @@ import { NavBar } from "../components/NavBar";
 import Preloader from "../components/Preloader";
 import Cursor from "../components/ui/Cursor";
 import ScrollProgress from "../components/ui/ScrollProgress";
+import ChapterHud from "../components/ui/ChapterHud";
+import ScrollFx from "../components/ui/ScrollFx";
 import SmoothScroll from "../components/providers/SmoothScroll";
 import { IntroProvider } from "../components/providers/IntroProvider";
 
@@ -94,6 +96,8 @@ export default async function LocaleLayout({
               <ScrollProgress />
               <NavBar />
               {children}
+              <ChapterHud />
+              <ScrollFx />
               <Cursor />
             </SmoothScroll>
           </IntroProvider>

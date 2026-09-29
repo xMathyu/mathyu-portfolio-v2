@@ -120,6 +120,7 @@ export default function SkillsSection() {
       <div className="container-x grid items-center gap-12 lg:grid-cols-12">
         <div className="lg:col-span-5">
           <SectionHeading
+          index="05"
             eyebrow={t("eyebrow")}
             title={t.rich("title", { em: (chunks) => <em>{chunks}</em> })}
             description={t("description")}
