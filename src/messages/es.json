@@ -74,6 +74,27 @@
       "ai": "IA y ML"
     }
   },
+  "Stack": {
+    "eyebrow": "Lo que hago",
+    "panels": {
+      "frontend": {
+        "title": "Frontend",
+        "body": "Interfaces rápidas, accesibles y pulidas con Next.js, React y Angular — de Figma a producción."
+      },
+      "backend": {
+        "title": "Backend",
+        "body": "APIs y microservicios robustos con Java Spring Boot, NestJS y FastAPI, incluida programación reactiva."
+      },
+      "cloud": {
+        "title": "Cloud & DevOps",
+        "body": "Infraestructura serverless y en contenedores en AWS, Azure y GCP, con CI/CD y quality gates."
+      },
+      "ai": {
+        "title": "IA & ML",
+        "body": "IA en producción: speech-to-text con Whisper X, APIs de OpenAI y pipelines de ML con impacto medible."
+      }
+    }
+  },
   "Stats": {
     "eyebrow": "En números",
     "title": "Impacto que se puede <em>medir</em>.",
@@ -162,6 +183,12 @@
       "score": "Score del agente",
       "tip": "Tip de coaching: confirma las necesidades del cliente antes de presentar opciones."
     }
+  },
+  "Warp": {
+    "l1": "Entremos al stack.",
+    "l2": "31 tecnologías.",
+    "l3": "Probadas en producción.",
+    "caption": "Desliza para entrar"
   },
   "Experience": {
     "eyebrow": "Experiencia",
@@ -279,7 +306,8 @@
   },
   "Companies": {
     "eyebrow": "Han confiado en mí",
-    "title": "Empresas y clientes con los que he trabajado"
+    "title": "Empresas y clientes con los que he trabajado",
+    "drag": "Arrastra"
   },
   "Achievements": {
     "eyebrow": "Reconocimientos",
@@ -346,11 +374,24 @@
     "submit": "Enviar mensaje",
     "sending": "Enviando…",
     "toastSuccess": "¡Mensaje enviado! Gracias por contactarme.",
-    "toastError": "Hubo un error al enviar el mensaje."
+    "toastError": "Hubo un error al enviar el mensaje.",
+    "band": "Contrátame"
   },
   "Footer": {
     "rights": "© {year} Mathyu Cardozo. Todos los derechos reservados.",
     "localTime": "Hora local en Perú",
     "backToTop": "Volver arriba"
+  },
+  "Hud": {
+    "chapters": {
+      "about": "Sobre mí",
+      "stack": "Lo que hago",
+      "work": "Destacado",
+      "experience": "Experiencia",
+      "skills": "Stack",
+      "projects": "Proyectos",
+      "achievements": "Logros",
+      "contact": "Contacto"
+    }
   }
 }

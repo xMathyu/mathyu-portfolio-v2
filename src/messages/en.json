@@ -74,6 +74,27 @@
       "ai": "AI & ML"
     }
   },
+  "Stack": {
+    "eyebrow": "What I do",
+    "panels": {
+      "frontend": {
+        "title": "Frontend",
+        "body": "Fast, accessible, polished interfaces with Next.js, React and Angular — from Figma to production."
+      },
+      "backend": {
+        "title": "Backend",
+        "body": "Robust APIs and microservices with Java Spring Boot, NestJS and FastAPI, including reactive programming."
+      },
+      "cloud": {
+        "title": "Cloud & DevOps",
+        "body": "Serverless and containerized infrastructure on AWS, Azure and GCP, with CI/CD and quality gates."
+      },
+      "ai": {
+        "title": "AI & ML",
+        "body": "AI in production: speech-to-text with Whisper X, OpenAI APIs and ML pipelines with measurable impact."
+      }
+    }
+  },
   "Stats": {
     "eyebrow": "By the numbers",
     "title": "Impact you can <em>measure</em>.",
@@ -162,6 +183,12 @@
       "score": "Agent score",
       "tip": "Coaching tip: confirm the customer's needs before presenting options."
     }
+  },
+  "Warp": {
+    "l1": "Into the stack.",
+    "l2": "31 technologies.",
+    "l3": "Battle-tested in production.",
+    "caption": "Scroll to dive in"
   },
   "Experience": {
     "eyebrow": "Experience",
@@ -279,7 +306,8 @@
   },
   "Companies": {
     "eyebrow": "Trusted by",
-    "title": "Companies and clients I've worked with"
+    "title": "Companies and clients I've worked with",
+    "drag": "Drag"
   },
   "Achievements": {
     "eyebrow": "Recognition",
@@ -346,11 +374,24 @@
     "submit": "Send message",
     "sending": "Sending…",
     "toastSuccess": "Message sent! Thank you for reaching out.",
-    "toastError": "There was an error sending your message."
+    "toastError": "There was an error sending your message.",
+    "band": "Hire me"
   },
   "Footer": {
     "rights": "© {year} Mathyu Cardozo. All rights reserved.",
     "localTime": "Local time in Peru",
     "backToTop": "Back to top"
+  },
+  "Hud": {
+    "chapters": {
+      "about": "About",
+      "stack": "What I do",
+      "work": "Featured",
+      "experience": "Experience",
+      "skills": "Stack",
+      "projects": "Projects",
+      "achievements": "Recognition",
+      "contact": "Contact"
+    }
   }
 }

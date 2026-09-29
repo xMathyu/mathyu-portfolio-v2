@@ -167,11 +167,18 @@ export function NavBar() {
                 key={id}
                 href={`#${id}`}
                 aria-current={active === id ? "true" : undefined}
+                onMouseEnter={(e) =>
+                  gsap.to(e.currentTarget.firstElementChild, {
+                    duration: 0.5,
+                    overwrite: true,
+                    scrambleText: { text: t(`links.${id}`), chars: "lowerCase", speed: 0.9 },
+                  })
+                }
                 className={`rounded-full px-3.5 py-2 text-[13px] transition-colors duration-300 ${
                   active === id ? "bg-white/[0.09] text-fg" : "text-muted hover:text-fg"
                 }`}
               >
-                {t(`links.${id}`)}
+                <span>{t(`links.${id}`)}</span>
               </a>
             ))}
           </nav>

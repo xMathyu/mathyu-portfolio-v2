@@ -10,11 +10,11 @@ import { useSpotlight } from "../ui/useSpotlight";
 
 const stats = [
   { key: "cost", value: 75, span: "sm:col-span-2 lg:col-span-4 lg:row-span-2", hero: true },
-  { key: "calls", value: 100, span: "lg:col-span-2", video: VIDEOS.soundwave },
-  { key: "years", value: 6, span: "lg:col-span-2", video: VIDEOS.code },
+  { key: "calls", value: 100, span: "lg:col-span-2", video: VIDEOS.stats.calls },
+  { key: "years", value: 6, span: "lg:col-span-2", video: VIDEOS.stats.years },
   { key: "hackathons", value: 2, span: "lg:col-span-2" },
-  { key: "remote", value: 3, span: "lg:col-span-2", video: VIDEOS.earth },
-  { key: "companies", value: 10, span: "sm:col-span-2 lg:col-span-2", video: VIDEOS.city },
+  { key: "remote", value: 3, span: "lg:col-span-2", video: VIDEOS.stats.remote },
+  { key: "companies", value: 10, span: "sm:col-span-2 lg:col-span-2", video: VIDEOS.stats.companies },
 ] as const;
 
 export default function StatsSection() {
@@ -29,11 +29,14 @@ export default function StatsSection() {
       mm.add(MOTION_OK, () => {
         gsap.from("[data-stat]", {
           autoAlpha: 0,
-          y: 60,
-          scale: 0.96,
-          duration: 1.2,
+          y: 90,
+          rotationX: 38,
+          scale: 0.92,
+          transformPerspective: 1100,
+          transformOrigin: "50% 100%",
+          duration: 1.4,
           ease: "expo.out",
-          stagger: 0.08,
+          stagger: { each: 0.09, from: "start" },
           scrollTrigger: { trigger: grid.current, start: "top 80%", once: true },
         });
 
@@ -66,6 +69,7 @@ export default function StatsSection() {
     <section ref={root} className="relative py-28 sm:py-36">
       <div className="container-x">
         <SectionHeading
+          index="02"
           eyebrow={t("eyebrow")}
           title={t.rich("title", { em: (chunks) => <em>{chunks}</em> })}
         />
@@ -78,6 +82,7 @@ export default function StatsSection() {
             <article
               key={stat.key}
               data-stat
+              data-tilt
               className={`card spotlight group flex flex-col justify-between p-7 sm:p-8 ${stat.span}`}
             >
               {"video" in stat && (

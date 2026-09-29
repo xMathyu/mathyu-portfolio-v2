@@ -239,3 +239,30 @@ h3 em,
     mask-image: none;
   }
 }
+
+/* Experience stage caption swap */
+@keyframes stage-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Manifesto highlights: a gradient underline drawn in by scroll (GSAP) */
+.manifesto em {
+  background-image: var(--ai-gradient);
+  background-repeat: no-repeat;
+  background-position: 0 94%;
+  background-size: 0% 0.08em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+@media (prefers-reduced-motion: reduce) {
+  .manifesto em {
+    background-size: 100% 0.08em;
+  }
+}

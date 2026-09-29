@@ -8,14 +8,29 @@ interface ScrubVideoProps {
   clip: VideoClip;
   lines: string[];
   caption?: string;
+  /** "frame": rounded card grows to full bleed. "portal": a circle opens onto the footage. */
+  reveal?: "frame" | "portal";
 }
+
+const REVEAL = {
+  frame: {
+    from: "inset(14% 8% 14% 8% round 32px)",
+    to: "inset(0% 0% 0% 0% round 0px)",
+    initial: "[clip-path:inset(14%_8%_14%_8%_round_32px)]",
+  },
+  portal: {
+    from: "circle(9% at 50% 50%)",
+    to: "circle(75% at 50% 50%)",
+    initial: "[clip-path:circle(9%_at_50%_50%)]",
+  },
+} as const;
 
 /**
  * Apple-style scroll-scrubbed footage: a rounded frame grows to full bleed,
  * then the video's playhead follows the scroll while headlines swap over it.
  * The clip must be encoded with frequent keyframes for smooth seeking.
  */
-export default function ScrubVideo({ clip, lines, caption }: ScrubVideoProps) {
+export default function ScrubVideo({ clip, lines, caption, reveal = "frame" }: ScrubVideoProps) {
   const root = useRef<HTMLDivElement>(null);
   const video = useRef<HTMLVideoElement>(null);
 
@@ -28,9 +43,9 @@ export default function ScrubVideo({ clip, lines, caption }: ScrubVideoProps) {
       mm.add(MOTION_OK, () => {
         gsap.fromTo(
           "[data-scrub-frame]",
-          { clipPath: "inset(14% 8% 14% 8% round 32px)" },
+          { clipPath: REVEAL[reveal].from },
           {
-            clipPath: "inset(0% 0% 0% 0% round 0px)",
+            clipPath: REVEAL[reveal].to,
             ease: "none",
             scrollTrigger: { trigger: root.current, start: "top 85%", end: "top top", scrub: true },
           },
@@ -87,7 +102,7 @@ export default function ScrubVideo({ clip, lines, caption }: ScrubVideoProps) {
       <div className="sticky top-0 h-[100svh] overflow-hidden motion-reduce:relative">
         <div
           data-scrub-frame
-          className="relative h-full w-full overflow-hidden bg-surface [clip-path:inset(14%_8%_14%_8%_round_32px)] motion-reduce:[clip-path:none]"
+          className={`relative h-full w-full overflow-hidden bg-surface motion-reduce:[clip-path:none] ${REVEAL[reveal].initial}`}
         >
           <video
             ref={video}

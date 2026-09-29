@@ -9,6 +9,8 @@ interface SectionHeadingProps {
   description?: React.ReactNode;
   align?: "left" | "center";
   className?: string;
+  /** Chapter number drawn huge behind the title, e.g. "04" */
+  index?: string;
 }
 
 /** Eyebrow + display title whose lines rise out of a mask on scroll. */
@@ -18,6 +20,7 @@ export default function SectionHeading({
   description,
   align = "left",
   className = "",
+  index,
 }: SectionHeadingProps) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -36,13 +39,36 @@ export default function SectionHeading({
           autoSplit: true,
           onSplit: (self) =>
             gsap.from(self.lines, {
-              yPercent: 110,
-              duration: 1.2,
+              yPercent: 115,
+              rotation: 4,
+              transformOrigin: "0% 100%",
+              duration: 1.3,
               ease: "expo.out",
               stagger: 0.09,
               scrollTrigger: trigger,
             }),
         });
+
+        // Eyebrow decodes like a terminal readout
+        gsap.to(root.querySelector("[data-eyebrow]"), {
+          duration: 1.2,
+          scrambleText: { text: "{original}", chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", speed: 0.6 },
+          scrollTrigger: trigger,
+        });
+
+        const number = root.querySelector("[data-heading-index]");
+        if (number) {
+          gsap.fromTo(
+            number,
+            { yPercent: 35, autoAlpha: 0 },
+            {
+              yPercent: -35,
+              autoAlpha: 1,
+              ease: "none",
+              scrollTrigger: { trigger: root, start: "top bottom", end: "bottom top", scrub: true },
+            },
+          );
+        }
 
         gsap.from(root.querySelectorAll("[data-fade]"), {
           autoAlpha: 0,
@@ -63,9 +89,18 @@ export default function SectionHeading({
   return (
     <div
       ref={ref}
-      className={`flex flex-col gap-6 ${centered ? "items-center text-center" : "items-start"} ${className}`}
+      className={`relative isolate flex flex-col gap-6 ${centered ? "items-center text-center" : "items-start"} ${className}`}
     >
-      <span data-fade className="eyebrow">
+      {index && (
+        <span
+          data-heading-index
+          aria-hidden="true"
+          className="pointer-events-none absolute -top-[0.3em] right-0 -z-10 select-none text-[clamp(8rem,24vw,24rem)] font-semibold leading-none tracking-tightest text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.09)]"
+        >
+          {index}
+        </span>
+      )}
+      <span data-fade data-eyebrow className="eyebrow">
         {eyebrow}
       </span>
       <h2
