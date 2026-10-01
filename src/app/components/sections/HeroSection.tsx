@@ -2,7 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { cvHref } from "@/app/lib/cv";
 import { FiArrowUpRight, FiDownload } from "react-icons/fi";
 import { gsap, useGSAP, ScrollTrigger, SplitText, MOTION_OK, FINE_POINTER } from "@/app/lib/gsap";
 import { useIntro } from "../providers/IntroProvider";
@@ -12,6 +13,7 @@ const HeroOrb = dynamic(() => import("../three/HeroOrb"), { ssr: false });
 
 export default function HeroSection() {
   const t = useTranslations("Hero");
+  const locale = useLocale();
   const { introDone } = useIntro();
   const root = useRef<HTMLElement>(null);
   const progress = useRef(0);
@@ -195,7 +197,7 @@ export default function HeroSection() {
               </a>
             </Magnetic>
             <a
-              href="/mathyu-cv-es.pdf"
+              href={cvHref(locale)}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-ghost"

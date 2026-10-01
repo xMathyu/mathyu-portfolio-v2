@@ -2,7 +2,8 @@
 
 import { useRef } from "react";
 import Image from "next/image";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { cvHref } from "@/app/lib/cv";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { FiCloud, FiCpu, FiDownload, FiLayers, FiUsers } from "react-icons/fi";
 import { gsap, useGSAP, SplitText, MOTION_OK } from "@/app/lib/gsap";
@@ -16,6 +17,7 @@ const pillars = [
 
 export default function AboutSection() {
   const t = useTranslations("About");
+  const locale = useLocale();
   const root = useRef<HTMLElement>(null);
 
   useGSAP(
@@ -176,7 +178,7 @@ export default function AboutSection() {
                 {t("social.github")}
               </a>
               <a
-                href="/mathyu-cv-es.pdf"
+                href={cvHref(locale)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-primary"

@@ -24,6 +24,8 @@ const instrumentSerif = Instrument_Serif({
   variable: "--font-serif",
 });
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://mathyu-portfolio.vercel.app";
+
 export const viewport: Viewport = {
   themeColor: "#000000",
 };
@@ -35,21 +37,37 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Metadata" });
+  // 1200×630 share card (photo + name + role + key numbers), one per language
+  const image = {
+    url: `/og/og-${locale === "es" ? "es" : "en"}.jpg`,
+    width: 1200,
+    height: 630,
+    alt: t("title"),
+  };
 
   return {
+    // Share previews (WhatsApp, LinkedIn, X) need absolute image URLs
+    metadataBase: new URL(SITE_URL),
     title: t("title"),
     description: t("description"),
+    alternates: {
+      canonical: `/${locale}`,
+      languages: { en: "/en", es: "/es" },
+    },
     openGraph: {
       title: t("title"),
       description: t("description"),
       type: "profile",
-      locale,
-      images: ["/images/mathyu.jpg"],
+      url: `/${locale}`,
+      siteName: "Mathyu Cardozo",
+      locale: locale === "es" ? "es_PE" : "en_US",
+      images: [image],
     },
     twitter: {
       card: "summary_large_image",
       title: t("title"),
       description: t("description"),
+      images: [image],
     },
   };
 }
