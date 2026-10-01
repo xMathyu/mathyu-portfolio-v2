@@ -76,3 +76,32 @@ export const PROJECT_VIDEOS: Partial<Record<string, VideoClip>> = {
   famengchuen: recording("famengchuen"),
   parco: recording("parco"),
 };
+
+/**
+ * Shots for the page-wide film stage (FilmStage). Sections opt in with
+ * `data-scene="<key>"`; the stage crossfades between shots as you scroll.
+ * `level` is how bright the footage sits under the copy.
+ */
+export interface Scene {
+  clip: VideoClip;
+  level: number;
+}
+
+export const SCENES = {
+  particles: { clip: VIDEOS.manifesto, level: 0.55 },
+  city: { clip: VIDEOS.stats.companies, level: 0.45 },
+  calls: { clip: VIDEOS.stats.calls, level: 0.5 },
+  code: { clip: VIDEOS.stack.backend, level: 0.5 },
+  "exp-entel": { clip: VIDEOS.experience.entel, level: 0.38 },
+  "exp-t309": { clip: VIDEOS.experience.t309, level: 0.4 },
+  "exp-encora": { clip: VIDEOS.experience.encora, level: 0.4 },
+  "exp-serverli": { clip: VIDEOS.experience.serverli, level: 0.4 },
+  "exp-mdp": { clip: VIDEOS.experience.mdp, level: 0.38 },
+  ai: { clip: VIDEOS.stack.ai, level: 0.55 },
+  cloud: { clip: VIDEOS.stack.cloud, level: 0.6 },
+  austin: { clip: VIDEOS.stats.remote, level: 0.45 },
+  bokeh: { clip: VIDEOS.contact, level: 0.5 },
+} as const satisfies Record<string, Scene>;
+
+/** `none` fades the stage to black (for sections that bring their own backdrop). */
+export type SceneKey = keyof typeof SCENES | "none";

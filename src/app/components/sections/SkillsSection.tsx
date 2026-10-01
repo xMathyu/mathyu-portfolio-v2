@@ -91,8 +91,10 @@ export default function SkillsSection() {
     () => {
       const mm = gsap.matchMedia();
       mm.add(MOTION_OK, () => {
+        // Keep the WebGL canvas composited (never visibility:hidden) so its first
+        // appearance doesn't make the GPU set everything up mid-scroll
         gsap.from("[data-sphere]", {
-          autoAlpha: 0,
+          opacity: 0.001,
           scale: 0.8,
           duration: 1.6,
           ease: "expo.out",
@@ -113,10 +115,6 @@ export default function SkillsSection() {
 
   return (
     <section ref={root} id="skills" className="relative overflow-hidden py-28 sm:py-40">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute right-0 top-1/3 h-[480px] w-[480px] rounded-full bg-ai-blue/10 blur-[140px]"
-      />
       <div className="container-x grid items-center gap-12 lg:grid-cols-12">
         <div className="lg:col-span-5">
           <SectionHeading
@@ -178,11 +176,15 @@ export default function SkillsSection() {
           </div>
         </div>
 
-        <div data-sphere className="relative lg:col-span-7">
+        <div data-sphere data-cursor={t("drag")} className="relative lg:col-span-7">
           <SkillsSphere
             activeCategory={activeCategory}
             activeLevel={activeLevel}
             emptyLabel={t("empty")}
+            labels={{
+              levels: Object.fromEntries(SKILL_LEVELS.map((l) => [l.key, t(`levels.${l.key}`)])),
+              categories: Object.fromEntries(SKILL_CATEGORIES.map((c) => [c.key, t(`categories.${c.key}`)])),
+            }}
           />
         </div>
       </div>

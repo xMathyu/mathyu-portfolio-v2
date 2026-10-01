@@ -251,7 +251,7 @@
   "SkillsSection": {
     "eyebrow": "Tech stack",
     "title": "Tools of the <em>trade</em>.",
-    "description": "Drag to rotate the sphere and hover to explore. Color marks the category, size marks the expertise level.",
+    "description": "Drag or swipe to spin the sphere, then tap or hover a technology to see its level. Color marks the category, size marks the expertise level.",
     "filterByLevel": "Filter by level",
     "filterByCategory": "Filter by category",
     "all": "All",
@@ -270,7 +270,8 @@
       "database": "Databases",
       "testing": "Testing",
       "tool": "Tools & AI"
-    }
+    },
+    "drag": "Drag"
   },
   "Projects": {
     "eyebrow": "Selected projects",
@@ -392,6 +393,7 @@
       "projects": "Projects",
       "achievements": "Recognition",
       "contact": "Contact"
-    }
+    },
+    "scene": "Scene"
   }
 }

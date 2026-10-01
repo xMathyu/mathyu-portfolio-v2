@@ -251,7 +251,7 @@
   "SkillsSection": {
     "eyebrow": "Stack tecnológico",
     "title": "Las herramientas del <em>oficio</em>.",
-    "description": "Arrastra para rotar la esfera y pasa el cursor para explorar. El color marca la categoría y el tamaño el nivel de expertise.",
+    "description": "Arrastra o desliza para girar la esfera, y toca o pasa el cursor sobre una tecnología para ver su nivel. El color marca la categoría y el tamaño el nivel de expertise.",
     "filterByLevel": "Filtrar por nivel",
     "filterByCategory": "Filtrar por categoría",
     "all": "Todos",
@@ -270,7 +270,8 @@
       "database": "Bases de Datos",
       "testing": "Testing",
       "tool": "Herramientas & IA"
-    }
+    },
+    "drag": "Arrastra"
   },
   "Projects": {
     "eyebrow": "Proyectos seleccionados",
@@ -392,6 +393,7 @@
       "projects": "Proyectos",
       "achievements": "Logros",
       "contact": "Contacto"
-    }
+    },
+    "scene": "Escena"
   }
 }

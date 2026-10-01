@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, Suspense } from "react";
+import { useEffect, useMemo, useRef, useState, Suspense, type RefObject } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Html, OrbitControls } from "@react-three/drei";
+import { Html } from "@react-three/drei";
 import * as THREE from "three";
 import TechIcon from "../TechIcon";
 import {
@@ -14,10 +14,31 @@ import {
   getFilteredSkills,
 } from "../skillsData";
 
+/** Translated names shown in a label's detail pill */
+export interface SkillLabels {
+  levels: Record<string, string>;
+  categories: Record<string, string>;
+}
+
 interface SkillsSphereProps {
   activeCategory?: SkillCategoryFilter;
   activeLevel?: SkillLevelFilter;
   emptyLabel: string;
+  labels: SkillLabels;
+}
+
+/** Drag state shared between the pointer handlers and the render loop. */
+interface Spin {
+  dragging: boolean;
+  /** rotation to apply on the next frame (radians) */
+  pendingX: number;
+  pendingY: number;
+  /** angular velocity carried after release (rad/s) */
+  vx: number;
+  vy: number;
+  /** a drag (not a tap) happened during the current press */
+  moved: boolean;
+  touch: boolean;
 }
 
 function fibonacciSphere(
@@ -53,12 +74,16 @@ function SkillLabel({
   onHover,
   onUnhover,
   isHovered,
+  spin,
+  labels,
 }: {
   skill: SkillNode;
   position: [number, number, number];
   onHover: () => void;
   onUnhover: () => void;
   isHovered: boolean;
+  spin: RefObject<Spin>;
+  labels: SkillLabels;
 }) {
   const color = CATEGORY_COLORS[skill.category];
   const size = LEVEL_SIZES[skill.level];
@@ -75,8 +100,15 @@ function SkillLabel({
         }}
       >
         <span
-          onMouseEnter={onHover}
-          onMouseLeave={onUnhover}
+          onMouseEnter={() => !spin.current?.touch && onHover()}
+          onMouseLeave={() => !spin.current?.touch && onUnhover()}
+          // Touch has no hover: a tap (not a swipe) toggles the details
+          onClick={() => {
+            const s = spin.current;
+            if (!s?.touch || s.moved) return;
+            if (isHovered) onUnhover();
+            else onHover();
+          }}
           style={{
             color,
             fontSize: `${isHovered ? size * 1.4 : size}px`,
@@ -110,14 +142,18 @@ function SkillLabel({
             <span
               style={{
                 display: "block",
-                fontSize: "9px",
-                color: "#94a3b8",
-                textAlign: "center",
-                marginTop: "2px",
+                fontSize: "11px",
+                fontWeight: 500,
+                color: "#e2e8f0",
+                background: "rgba(0, 0, 0, 0.6)",
+                border: `1px solid ${color}55`,
+                borderRadius: "999px",
+                padding: "2px 8px",
+                marginTop: "4px",
                 textShadow: "none",
               }}
             >
-              {skill.level} · {skill.category}
+              {labels.levels[skill.level] ?? skill.level} · {labels.categories[skill.category] ?? skill.category}
             </span>
           )}
         </span>
@@ -126,7 +162,15 @@ function SkillLabel({
   );
 }
 
-function RotatingCloud({ skills }: { skills: SkillNode[] }) {
+function RotatingCloud({
+  skills,
+  spin,
+  labels,
+}: {
+  skills: SkillNode[];
+  spin: RefObject<Spin>;
+  labels: SkillLabels;
+}) {
   const groupRef = useRef<THREE.Group>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
@@ -140,11 +184,25 @@ function RotatingCloud({ skills }: { skills: SkillNode[] }) {
   );
 
   useFrame((_, delta) => {
-    if (groupRef.current) {
-      const speed = hoveredIndex !== null ? 0.03 : 0.12;
-      groupRef.current.rotation.y += speed * delta;
-      groupRef.current.rotation.x += speed * 0.15 * delta;
+    const group = groupRef.current;
+    const s = spin.current;
+    if (!group || !s) return;
+    const auto = hoveredIndex !== null ? 0.03 : 0.12;
+
+    if (s.dragging) {
+      group.rotation.y += s.pendingY;
+      group.rotation.x += s.pendingX;
+    } else {
+      // Fling: carry the release velocity and let it ease out
+      const decay = Math.pow(0.04, delta);
+      s.vx *= decay;
+      s.vy *= decay;
+      group.rotation.y += (auto + s.vy) * delta;
+      group.rotation.x += (auto * 0.15 + s.vx) * delta;
     }
+    group.rotation.x = THREE.MathUtils.clamp(group.rotation.x, -1.1, 1.1);
+    s.pendingX = 0;
+    s.pendingY = 0;
   });
 
   return (
@@ -153,6 +211,8 @@ function RotatingCloud({ skills }: { skills: SkillNode[] }) {
         <SkillLabel
           key={skill.name}
           skill={skill}
+          spin={spin}
+          labels={labels}
           position={positions[i]}
           isHovered={hoveredIndex === i}
           onHover={() => setHoveredIndex(i)}
@@ -186,12 +246,18 @@ export default function SkillsSphere({
   activeCategory = "all",
   activeLevel = "all",
   emptyLabel,
+  labels,
 }: SkillsSphereProps) {
-  const [canDrag, setCanDrag] = useState(false);
-
-  useEffect(() => {
-    setCanDrag(window.matchMedia("(pointer: fine)").matches);
-  }, []);
+  const spin = useRef<Spin>({
+    dragging: false,
+    pendingX: 0,
+    pendingY: 0,
+    vx: 0,
+    vy: 0,
+    moved: false,
+    touch: false,
+  });
+  const last = useRef({ x: 0, y: 0, t: 0 });
 
   const filteredSkills = useMemo(
     () =>
@@ -202,27 +268,65 @@ export default function SkillsSphere({
     [activeCategory, activeLevel],
   );
 
+  // Drag to spin, fling to keep it going. `touch-action: pan-y` leaves vertical
+  // swipes to the page, so phones can still scroll past the sphere.
+  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    const s = spin.current;
+    s.touch = e.pointerType !== "mouse";
+    s.dragging = true;
+    s.moved = false;
+    s.vx = 0;
+    s.vy = 0;
+    last.current = { x: e.clientX, y: e.clientY, t: e.timeStamp };
+    if (!s.touch) e.currentTarget.setPointerCapture(e.pointerId);
+  };
+
+  const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    const s = spin.current;
+    if (!s.dragging) return;
+    const dx = e.clientX - last.current.x;
+    const dy = s.touch ? 0 : e.clientY - last.current.y;
+    const dt = Math.max(1, e.timeStamp - last.current.t) / 1000;
+    if (Math.abs(dx) + Math.abs(dy) > 2) s.moved = true;
+    const ry = dx * 0.008;
+    const rx = dy * 0.006;
+    s.pendingY += ry;
+    s.pendingX += rx;
+    // Smoothed release velocity, capped so a hard flick stays readable
+    s.vy = THREE.MathUtils.clamp(s.vy * 0.5 + (ry / dt) * 0.5, -6, 6);
+    s.vx = THREE.MathUtils.clamp(s.vx * 0.5 + (rx / dt) * 0.5, -4, 4);
+    last.current = { x: e.clientX, y: e.clientY, t: e.timeStamp };
+  };
+
+  const onPointerEnd = () => {
+    const s = spin.current;
+    s.dragging = false;
+    // A finger held still before lifting shouldn't fling
+    if (performance.now() - last.current.t > 120) {
+      s.vx = 0;
+      s.vy = 0;
+    }
+  };
+
   return (
-    <div className="relative w-full h-[21.875rem] max-h-[85svh] sm:h-[28rem] md:h-[37.5rem]">
+    <div
+      className="relative h-[21.875rem] max-h-[85svh] w-full cursor-grab touch-pan-y select-none active:cursor-grabbing sm:h-[28rem] md:h-[37.5rem]"
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={onPointerEnd}
+      onPointerCancel={onPointerEnd}
+      onPointerLeave={(e) => e.pointerType === "mouse" && onPointerEnd()}
+    >
       <Canvas
         camera={{ position: [0, 0, 14], fov: 45 }}
         resize={{ offsetSize: true }}
-        style={{ background: "transparent" }}
+        style={{ background: "transparent", touchAction: "pan-y" }}
         dpr={[1, 1.5]}
         gl={{ alpha: true, antialias: true }}
       >
         <Suspense fallback={null}>
           <ambientLight intensity={0.5} />
-          <RotatingCloud skills={filteredSkills} />
-          {canDrag && (
-            <OrbitControls
-              enableZoom={false}
-              enablePan={false}
-              autoRotate={false}
-              minPolarAngle={Math.PI / 4}
-              maxPolarAngle={(3 * Math.PI) / 4}
-            />
-          )}
+          <RotatingCloud skills={filteredSkills} spin={spin} labels={labels} />
         </Suspense>
       </Canvas>
 

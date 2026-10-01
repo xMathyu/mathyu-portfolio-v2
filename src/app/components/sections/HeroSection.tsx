@@ -145,7 +145,7 @@ export default function HeroSection() {
         <div className="hero-glow absolute left-1/2 top-1/2 h-[min(56vw,300px)] w-[min(56vw,300px)] -translate-x-1/2 -translate-y-1/2 md:left-[72%] md:top-[26%] md:h-[34vw] md:max-h-[560px] md:w-[34vw] md:max-w-[560px] md:translate-y-0" />
         <HeroOrb progress={progress} />
       </div>
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-3/5 bg-gradient-to-t from-ink via-ink/75 to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-3/5 bg-gradient-to-t from-ink/85 via-ink/50 to-transparent" />
 
       <div
         data-hero-content

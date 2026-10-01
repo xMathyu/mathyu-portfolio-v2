@@ -22,23 +22,34 @@ export default function LazyVideo({ clip, className = "" }: LazyVideoProps) {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     video.muted = true;
     let loaded = false;
+    const load = () => {
+      if (loaded) return;
+      video.src = clip.src;
+      video.preload = "auto";
+      loaded = true;
+    };
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          if (!loaded) {
-            video.src = clip.src;
-            loaded = true;
-          }
-          if (!reduce) video.play().catch(() => {});
-        } else {
-          video.pause();
-        }
-      },
-      { rootMargin: "300px 0px" },
+    // Fetch a screen early (also clips waiting off to the side in horizontal
+    // tracks) so playback never starts cold...
+    const fetcher = new IntersectionObserver(
+      ([entry]) => entry.isIntersecting && load(),
+      { rootMargin: "100% 100%" },
     );
-    observer.observe(video);
-    return () => observer.disconnect();
+    // ...but only decode/play while actually on screen
+    const player = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        load();
+        if (!reduce) video.play().catch(() => {});
+      } else {
+        video.pause();
+      }
+    });
+    fetcher.observe(video);
+    player.observe(video);
+    return () => {
+      fetcher.disconnect();
+      player.disconnect();
+    };
   }, [clip.src]);
 
   return (

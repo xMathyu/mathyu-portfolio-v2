@@ -27,7 +27,9 @@ html {
 
 body {
   margin: 0;
-  background: #000;
+  /* No body background: <html> paints the black, so the fixed film stage
+     (z-index -10, see FilmStage) can show through every section */
+  background: transparent;
   color: #f5f5f7;
   overflow-x: clip;
   -webkit-font-smoothing: antialiased;
