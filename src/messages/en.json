@@ -4,7 +4,8 @@
     "description": "Senior Full-Stack Engineer and AI Tech Lead with 6+ years building scalable products with Next.js, Java Spring Boot, NestJS, AWS and Azure. Available for new opportunities."
   },
   "Preloader": {
-    "role": "Full-Stack · AI · Cloud"
+    "role": "Full-Stack · AI · Cloud",
+    "loading": "Loading the reel"
   },
   "NavBar": {
     "logo": "Mathyu Cardozo",
@@ -197,7 +198,7 @@
     "present": "Present",
     "current": "Current",
     "entel": {
-      "position": "Data Scientist Expert / AI Tech Lead",
+      "position": "AI Tech Lead",
       "company": "Entel",
       "location": "Hybrid",
       "description": "Leading the development of SinfonIA, an AI-powered platform for transcribing hundreds of thousands of daily audio calls using Whisper X, generating insights to help agents improve performance.",

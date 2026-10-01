@@ -3,7 +3,8 @@
 import { useRef, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import emailjs from "@emailjs/browser";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { cvHref } from "@/app/lib/cv";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { FiArrowUpRight, FiDownload, FiSend } from "react-icons/fi";
 import { gsap, useGSAP, SplitText, MOTION_OK } from "@/app/lib/gsap";
@@ -12,11 +13,12 @@ import Magnetic from "../ui/Magnetic";
 const links = [
   { key: "linkedin", href: "https://www.linkedin.com/in/mathyu-cardozo-7325a51b5/", icon: FaLinkedin },
   { key: "github", href: "https://github.com/xMathyu", icon: FaGithub },
-  { key: "cv", href: "/mathyu-cv-es.pdf", icon: FiDownload },
+  { key: "cv", href: "cv", icon: FiDownload },
 ] as const;
 
 export default function ContactSection() {
   const t = useTranslations("Contact");
+  const locale = useLocale();
   const root = useRef<HTMLElement>(null);
   const [sending, setSending] = useState(false);
 
@@ -158,7 +160,7 @@ export default function ContactSection() {
               {links.map(({ key, href, icon: Icon }) => (
                 <li key={key}>
                   <a
-                    href={href}
+                    href={href === "cv" ? cvHref(locale) : href}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="group flex items-center justify-between py-5 text-xl font-medium text-fg transition-colors sm:text-2xl"
