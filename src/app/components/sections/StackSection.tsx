@@ -32,6 +32,17 @@ export default function StackSection() {
       mm.add(PIN_OK, () => {
         const el = track.current;
         if (!el) return;
+        // Cut in: the shot opens out of a framed window over the film stage
+        gsap.fromTo(
+          "[data-stack-pin]",
+          { clipPath: "inset(14% 7% 14% 7% round 36px)" },
+          {
+            clipPath: "inset(0% 0% 0% 0% round 0px)",
+            ease: "none",
+            scrollTrigger: { trigger: "[data-stack-pin]", start: "top bottom", end: "top top", scrub: true },
+          },
+        );
+
         const panels = gsap.utils.toArray<HTMLElement>("[data-stack-panel]");
         const distance = () => el.scrollWidth - window.innerWidth;
 
@@ -99,7 +110,7 @@ export default function StackSection() {
   );
 
   return (
-    <section ref={root} aria-label={t("eyebrow")} className="relative bg-ink">
+    <section ref={root} aria-label={t("eyebrow")} className="relative">
       <div data-stack-pin className="relative overflow-hidden pin:h-[100svh]">
         <div
           ref={track}

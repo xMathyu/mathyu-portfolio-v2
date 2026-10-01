@@ -7,8 +7,6 @@ import { useTranslations } from "next-intl";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { FiArrowUpRight, FiDownload, FiSend } from "react-icons/fi";
 import { gsap, useGSAP, SplitText, MOTION_OK } from "@/app/lib/gsap";
-import { VIDEOS } from "@/app/lib/videos";
-import LazyVideo from "../ui/LazyVideo";
 import Magnetic from "../ui/Magnetic";
 
 const links = [
@@ -105,11 +103,7 @@ export default function ContactSection() {
   };
 
   return (
-    <section ref={root} id="contact" className="relative overflow-hidden py-28 sm:py-40">
-      <LazyVideo
-        clip={VIDEOS.contact}
-        className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-30 mix-blend-screen [mask-image:radial-gradient(ellipse_at_center,#000_30%,transparent_75%)]"
-      />
+    <section ref={root} id="contact" data-scene="bokeh" className="relative overflow-hidden py-28 sm:py-40">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -bottom-72 left-1/2 h-[520px] w-[90%] max-w-5xl -translate-x-1/2 rounded-full opacity-25 blur-[140px]"

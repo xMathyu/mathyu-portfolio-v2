@@ -1,16 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { FiMapPin } from "react-icons/fi";
 import { gsap, useGSAP, ScrollTrigger, MOTION_OK } from "@/app/lib/gsap";
-import { VIDEOS, type VideoClip } from "@/app/lib/videos";
 import SectionHeading from "../ui/SectionHeading";
-import LazyVideo from "../ui/LazyVideo";
 import TechIcon from "../TechIcon";
 
-type ExperienceKey = keyof typeof VIDEOS.experience;
+type ExperienceKey = "entel" | "t309" | "encora" | "serverli" | "mdp";
 
 interface Experience {
   id: string;
@@ -84,43 +82,6 @@ function formatDate(dateStr: string, locale: string): string {
   return label.charAt(0).toUpperCase() + label.slice(1);
 }
 
-/**
- * One layer of the desktop video stage. Only the active layer downloads and
- * plays; the rest stay paused under a crossfade.
- */
-function StageLayer({ clip, active }: { clip: VideoClip; active: boolean }) {
-  const ref = useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    const video = ref.current;
-    if (!video) return;
-    if (active) {
-      if (!video.getAttribute("src")) video.src = clip.src;
-      if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        video.play().catch(() => {});
-      }
-      return;
-    }
-    const id = window.setTimeout(() => video.pause(), 700);
-    return () => window.clearTimeout(id);
-  }, [active, clip.src]);
-
-  return (
-    <video
-      ref={ref}
-      poster={clip.poster}
-      muted
-      loop
-      playsInline
-      preload="none"
-      aria-hidden="true"
-      className={`absolute inset-0 h-full w-full object-cover transition-[opacity,transform] duration-700 ease-out ${
-        active ? "scale-100 opacity-100" : "scale-105 opacity-0"
-      }`}
-    />
-  );
-}
-
 export default function ExperienceSection() {
   const t = useTranslations("Experience");
   const locale = useLocale();
@@ -153,16 +114,6 @@ export default function ExperienceSection() {
               end: "bottom 60%",
               scrub: true,
             },
-          },
-        );
-
-        gsap.fromTo(
-          "[data-exp-stage]",
-          { clipPath: "inset(10% 10% 10% 10% round 28px)" },
-          {
-            clipPath: "inset(0% 0% 0% 0% round 28px)",
-            ease: "none",
-            scrollTrigger: { trigger: "[data-exp-list]", start: "top 90%", end: "top 40%", scrub: true },
           },
         );
 
@@ -200,7 +151,7 @@ export default function ExperienceSection() {
   const current = experiences[active];
 
   return (
-    <section ref={root} id="experience" className="relative py-28 sm:py-40">
+    <section ref={root} id="experience" data-scene="exp-entel" className="relative py-28 sm:py-40">
       <div className="container-x">
         <SectionHeading
           index="04"
@@ -210,38 +161,30 @@ export default function ExperienceSection() {
         />
 
         <div data-exp-list className="relative mt-20 grid gap-12 lg:grid-cols-12 lg:gap-16">
-          {/* Desktop stage: footage for the role being read */}
+          {/* Desktop: the page-wide film stage plays this role's footage; this is its title card */}
           <div className="hidden lg:col-span-5 lg:block">
-            <div
-              data-exp-stage
-              className="sticky top-24 h-[calc(100svh-8rem)] max-h-[46rem] overflow-hidden rounded-[28px] border border-white/[0.08] bg-surface"
-            >
-              {experiences.map((exp, i) => (
-                <StageLayer key={exp.id} clip={VIDEOS.experience[exp.key]} active={i === active} />
-              ))}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-black/40" />
-
-              <div className="absolute inset-x-0 top-0 flex items-center justify-between p-6 font-mono text-[11px] uppercase tracking-[0.2em] text-fg/80">
-                <span>{t("eyebrow")}</span>
+            <div className="sticky top-[30svh]">
+              <div className="flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.2em] text-fg/70">
                 <span className="tabular-nums">
                   {String(active + 1).padStart(2, "0")} / {String(experiences.length).padStart(2, "0")}
                 </span>
+                <span className="h-px w-10 bg-white/30" />
+                <span>{t("eyebrow")}</span>
               </div>
-
-              <div key={current.id} className="absolute inset-x-0 bottom-0 animate-[stage-in_0.7s_cubic-bezier(0.16,1,0.3,1)] p-7">
-                <span className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl border border-white/15 bg-black/40 p-2.5 backdrop-blur-md">
+              <div key={current.id} className="mt-8 animate-[stage-in_0.7s_cubic-bezier(0.16,1,0.3,1)]">
+                <span className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl border border-white/15 bg-black/40 p-3 backdrop-blur-md">
                   <Image
                     src={current.companyLogo}
                     alt=""
-                    width={40}
-                    height={40}
+                    width={48}
+                    height={48}
                     className="h-full w-full object-contain"
                   />
                 </span>
-                <p className="mt-5 text-3xl font-semibold tracking-[-0.03em] text-fg">
-                  {t(`${current.key}.company`)}
+                <p className="mt-6 text-[clamp(2.5rem,4.4vw,4.5rem)] font-semibold leading-[0.95] tracking-tightest text-fg">
+                  {t(`${current.key}.company`).split(" (")[0]}
                 </p>
-                <p className="mt-2 font-mono text-xs uppercase tracking-[0.15em] text-fg/70">
+                <p className="mt-4 font-mono text-xs uppercase tracking-[0.15em] text-fg/70">
                   {period(current)}
                 </p>
               </div>
@@ -260,22 +203,13 @@ export default function ExperienceSection() {
               <article
                 key={exp.id}
                 data-exp-row
+                data-scene={`exp-${exp.key}`}
                 className="relative border-t border-white/[0.08] py-12 pl-10 first-of-type:border-t-0 first-of-type:pt-0 md:pl-14"
               >
                 <span
                   data-exp-dot
                   className="absolute left-0 top-[52px] h-[11px] w-[11px] rounded-full bg-fg ring-4 ring-ink [article:first-of-type>&]:top-1"
                 />
-
-                {/* Phones & tablets: each role carries its own clip */}
-                <div
-                  data-exp-reveal
-                  data-skew="y"
-                  className="relative mb-8 aspect-[16/9] overflow-hidden rounded-[22px] border border-white/[0.08] bg-surface lg:hidden"
-                >
-                  <LazyVideo clip={VIDEOS.experience[exp.key]} className="h-full w-full object-cover" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-                </div>
 
                 <div data-exp-reveal className="flex flex-wrap items-center gap-4">
                   <span className="flex h-12 w-12 flex-shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] p-2">

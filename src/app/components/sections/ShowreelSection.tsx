@@ -25,6 +25,17 @@ export default function ShowreelSection() {
     () => {
       const mm = gsap.matchMedia();
       mm.add(MOTION_OK, () => {
+        // Cut in: the shot opens out of a framed window over the film stage
+        gsap.fromTo(
+          "[data-reel-pin]",
+          { clipPath: "inset(14% 7% 14% 7% round 36px)" },
+          {
+            clipPath: "inset(0% 0% 0% 0% round 0px)",
+            ease: "none",
+            scrollTrigger: { trigger: "[data-reel-pin]", start: "top bottom", end: "top top", scrub: true },
+          },
+        );
+
         gsap
           .timeline({
             defaults: { ease: "none" },

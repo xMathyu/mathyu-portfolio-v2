@@ -4,7 +4,7 @@ import { useRef } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { FiArrowUpRight } from "react-icons/fi";
-import { gsap, useGSAP, MOTION_OK } from "@/app/lib/gsap";
+import { gsap, useGSAP, ScrollTrigger, MOTION_OK } from "@/app/lib/gsap";
 import { PROJECT_VIDEOS } from "@/app/lib/videos";
 import SectionHeading from "../ui/SectionHeading";
 import LazyVideo from "../ui/LazyVideo";
@@ -71,6 +71,18 @@ export default function ProjectsSection() {
 
   useGSAP(
     () => {
+      // Ambient backdrop follows the project in focus (works with or without motion)
+      const ambient = gsap.utils.toArray<HTMLElement>("[data-ambient]");
+      let shown = -1;
+      const setAmbient = (i: number) => {
+        if (i === shown) return;
+        shown = i;
+        ambient.forEach((el, j) =>
+          gsap.to(el, { autoAlpha: j === i ? 1 : 0, scale: j === i ? 1.25 : 1.4, duration: 1.2, ease: "power2.out", overwrite: true }),
+        );
+      };
+      setAmbient(0);
+
       const mm = gsap.matchMedia();
 
       // Desktop: pin the section and scroll the cards sideways
@@ -96,6 +108,7 @@ export default function ProjectsSection() {
                 Math.floor(self.progress * projects.length) + 1,
               );
               if (counter.current) counter.current.textContent = pad(index);
+              setAmbient(index - 1);
             },
           },
         });
@@ -166,6 +179,17 @@ export default function ProjectsSection() {
       });
 
       // Mobile / tablet: cards rise and unfold in 3D as they enter
+      mm.add("(max-width: 1023px)", () => {
+        gsap.utils.toArray<HTMLElement>("[data-project-card]").forEach((card, i) => {
+          ScrollTrigger.create({
+            trigger: card,
+            start: "top 60%",
+            end: "bottom 60%",
+            onToggle: (self) => self.isActive && setAmbient(i),
+          });
+        });
+      });
+
       mm.add(`${MOTION_OK} and (max-width: 1023px)`, () => {
         gsap.utils.toArray<HTMLElement>("[data-project-card]").forEach((card) => {
           gsap.from(card, {
@@ -195,11 +219,24 @@ export default function ProjectsSection() {
   );
 
   return (
-    <section ref={root} id="projects" className="relative">
+    <section ref={root} id="projects" data-scene="none" className="relative">
       <div
         data-projects-pin
-        className="relative flex flex-col justify-center overflow-hidden py-28 sm:py-36 lg:h-[100svh] lg:py-0"
+        className="relative isolate flex flex-col justify-center overflow-hidden py-28 sm:py-36 lg:h-[100svh] lg:py-0"
       >
+        {/* Ambient light: a blurred wash of the project in focus fills the frame */}
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
+          <div className="sticky top-0 h-[100svh] overflow-hidden">
+            {projects.map((project) => (
+              <div key={project.key} data-ambient className="invisible absolute inset-0 opacity-0">
+                <Image src={project.image} alt="" fill sizes="50vw" className="object-cover blur-3xl saturate-150" />
+              </div>
+            ))}
+            <div className="absolute inset-0 bg-black/60" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,#000_95%)]" />
+          </div>
+        </div>
+
         <div className="container-x mb-12 flex flex-col gap-8 lg:mb-10 lg:flex-row lg:items-end lg:justify-between">
           <SectionHeading
           index="06"

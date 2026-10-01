@@ -84,7 +84,7 @@ export default async function LocaleLayout({
       lang={locale}
       className={`${geist.variable} ${geistMono.variable} ${instrumentSerif.variable}`}
     >
-      <body className="bg-ink font-sans text-fg antialiased">
+      <body className="font-sans text-fg antialiased">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
