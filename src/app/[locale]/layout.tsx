@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { Analytics } from "@vercel/analytics/next";
 import { routing } from "@/i18n/routing";
 import "lenis/dist/lenis.css";
 import "../globals.css";
@@ -121,6 +122,7 @@ export default async function LocaleLayout({
           </IntroProvider>
         </NextIntlClientProvider>
         <div className="grain" aria-hidden="true" />
+        <Analytics />
       </body>
     </html>
   );
