@@ -24,7 +24,7 @@ const instrumentSerif = Instrument_Serif({
   variable: "--font-serif",
 });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://mathyu-portfolio.vercel.app";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://mathyu.mathyusolutions.com";
 
 export const viewport: Viewport = {
   themeColor: "#000000",
